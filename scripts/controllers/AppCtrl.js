@@ -112,33 +112,12 @@
 				};
 
 				$scope.loginToChatServer = function(){
-					// ChatServerService.login.query({
-					// 	email : $rootScope.bargainAgent.email,
-					// 	access_token : $rootScope.bargainAgent.token,
-					// 	device_type : "web",
-					// 	device_id : navigator.userAgent,
-					// 	utype : "Normal",
-					// 	device_token : "TOKEN",
-					// 	device_detail : "none+details"
-					// }, function success(response){
-					// 	if(response && !response.status && response.data){
-							$rootScope.tigoId = $rootScope.user.name;//response.data['tego_id'];
-							$rootScope.sessionid = "";//response.data['session_id'];
-							$rootScope.plustxtId = $rootScope.user.name;//response.data['tego_id'] + "@" + Globals.AppConfig.ChatHostURI;
-							$rootScope.password = $rootScope.user.password;//response.data['password'] + response.data['tego_id'].substring(0, 3);
-							StropheService.connection($rootScope.plustxtId, $rootScope.password);
-							$scope.getMessageTemplates();
-						// }
-						// else{
-						// 	$timeout(function(){
-						// 		$scope.chatConnectionStatus = "Not registered on chat server! Logging out..";
-      //               		});
-						// }
-					// }, function failure(error){
-					// 	$timeout(function(){
-					// 		$scope.chatConnectionStatus = "Connection Could not be made";
-     //                	});
-					// })
+					$rootScope.tigoId = $rootScope.user.name;//response.data['tego_id'];
+					$rootScope.sessionid = "";//response.data['session_id'];
+					$rootScope.plustxtId = $rootScope.user.name + '@' + Globals.AppConfig.ChatHostURI;//response.data['tego_id'] + "@" + Globals.AppConfig.ChatHostURI;
+					$rootScope.password = $rootScope.user.password;//response.data['password'] + response.data['tego_id'].substring(0, 3);
+					StropheService.connection($rootScope.plustxtId, $rootScope.password);
+					$scope.getMessageTemplates();
 				};
 
 				$scope.getMessageTemplates = function(){
@@ -217,9 +196,11 @@
 				});
 
 				$scope.logout = function(){
+					$scope.init();
 					$rootScope.isLogin = $scope.isLogin = false;
 					$rootScope.user = null;
-					$scope.forceLogout("Logging Out.")
+					$scope.forceLogout("Logging Out.");
+					window.location= window.location.href;
 
 				}
 				

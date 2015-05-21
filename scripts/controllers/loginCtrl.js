@@ -33,7 +33,7 @@
 		$scope.logIn  = function(){
 			if(validateLogin()){
 				 var user = {
-				 	name : $scope.username + '@' + Globals.AppConfig.ChatHostURI,
+				 	name : $scope.username,
 				 	password: $scope.password
 				 }
 				 $rootScope.user = user;
