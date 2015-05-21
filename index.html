@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="bargain">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="">
+    <title>Agent Panel</title>
+
+    
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700' rel='stylesheet' type='text/css'>
+    
+    <!-- Bootstrap CSS -->
+   <!--  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
+
+    <!-- In case cdn is not working. Use below and comment above CDN Path. -->
+    <link href="styles/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font-Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link href="styles/main.css" rel="stylesheet">
+
+   
+
+
+    <script src="scripts/vendor/jquery.js"></script>
+    <script src="scripts/config/AppConfig.js"></script>
+    <script src="scripts/vendor/angular.js"></script>
+    <script src="scripts/vendor/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script src="scripts/vendor/angular-resource.js"></script>
+    <script src="scripts/vendor/angular-route.js"></script>
+    <script src="scripts/vendor/angular-local-storage.js"></script>
+    <script src="scripts/vendor/angular-cookies.js"></script>
+    <script src="scripts/vendor/strophe.js"></script>
+    <script src="scripts/vendor/moment.js"></script>
+
+
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/loginCtrl.js"></script>
+    <script src="scripts/controllers/AppCtrl.js"></script>
+    <script src="scripts/controllers/ChatCtrl.js"></script>
+    <script src="scripts/services/httpService.js"></script>
+    <script src="scripts/services/ChatServerService.js"></script>
+    <script src="scripts/services/ChatCoreService.js"></script>
+    <script src="scripts/services/StropheService.js"></script>
+    <script src="scripts/services/UtilService.js"></script>
+    <script src="scripts/services/TemplateService.js"></script>
+    <script src="scripts/services/IntimationService.js"></script>
+    <script src="scripts/services/MessageService.js"></script>
+    <script src="scripts/directives/angular-enter/angular-enter.js"></script>
+    <script src="scripts/directives/input-type-number/input-type-number.js"></script>
+    <script src="scripts/directives/angular-focus-blur/angular-focus-blur.js"></script>
+    <script src="scripts/directives/chat-scroll-down/chat-scroll-down.js"></script>
+    
+    <script src="scripts/directives/chat-area/chat-area.js"></script>
+    <script src="scripts/directives/chat-contact-list/chat-contact-list.js"></script>
+    <script src="scripts/directives/promocode-calculator/promocode-calculator.js"></script>
+
+
+</head>
+
+<body ng-controller="AppCtrl">
+
+    <!-- <input type="text" ng-init="userData =JSON.stringify(user)" ng-model="session" style="display:none"> -->
+    <div id="header" class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-1"> Logo</div>
+                <div class="col-md-9 fw-bold mt5 f18 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
+                <div class="col-md-2 logoutDiv"  align="center" ng-if="isLogin">
+                    <div class="user"></div>
+                    <div  ng-click="logout()"  class="logout">Logout</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" align="center">
+        <!--login template starts-->
+        <div class="login" ng-controller="loginCtrl" ng-if="!isLogin">
+            <div class="loginBox">
+                <form class="form-horizontal ">
+                    <div class="form-group">
+                        <label for="inputEmail" class="control-label col-xs-3">Email</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="inputEmail" placeholder="Email" ng-model="username">
+                            <div ng-if="usernameError" class="error">{{usernameError}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="control-label col-xs-3">Password</label>
+                        <div class="col-xs-9">
+                            <input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="password">
+                            <div ng-if="passwordError" class="error">{{passwordError}}</div>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <div class="col-xs-offset-2 col-xs-10">
+                            <div class="checkbox">
+                                <label><input type="checkbox"> Remember me</label>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-primary" ng-click="logIn()">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+         <!--login template starts-->
+        <div ng-controller='ChatCtrl' class="mt20 row" ng-if="isLogin">
+            <div class="col-md-2 p0">
+                    <chat-contact-list contact="contact"></chat-contact-list>
+            </div>
+            <div class="col-md-10">
+                <div ng-repeat="chatData in activeWindows" class="col-md-4" style="padding-right: 10px; padding-left: 0px;">
+                    <chat-area chat-data="chatData" products="products" contact="contact" templates="templates"></chat-area>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- <div class="col-md-3"> -->
+<script type='text/ng-template' id='tpl-productColour'>
+    <div class="col-md-12" style="padding:0px;">
+        <ul class="chatUL" ng-class="activeChatUser == chatData.threadId ? 'activeChat' : 'inactive'">
+            
+            <li class="chatheader" ng-click="setFocus()">
+                <div class="row">
+                    <div class="col-md-10  h11 fw-bold" > {{contact.name}} ({{contact.id}})</div>
+                    <div class="col-md-1  closeIcon" ng-click="closeUserChat()"></div>
+                </div>
+            </li>
+            
+            <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
+                <div style="margin-bottom:10px;">
+                    <!-- <span ng-click="loadHistory(chatData.userId)">Load Previous Message</span> -->
+                    <div ng-repeat='message in messages'>
+                        <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
+                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
+                                {{message.txt}}
+                            </div>
+                            <div class='chat-name' ng-if="message.isPromoCode">
+                                {{getJsonParsedMesg(message.txt).PRMCODE.message}}
+                            </div>
+                            <span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
+                        </div>
+                        <div align="center" class="clear messageTime" ng-if="message.sender != contact.id" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+                        <div class='leftConversation clear' ng-if="message.isCloseChatMesg">
+                            User left the conversation
+                        </div>
+                    </div>
+                <!-- <div class="linkBtn">
+                    <a > show new messages</a>
+                </div> -->
+                
+            </li>
+            
+
+            <!-- Bottom Text Area -->
+            <li ng-click="setFocus()">
+                <div class="chatText col-md-12">
+                        <textarea type="text" placeholder="Send a message" class="chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
+                </div>
+            </li>
+        </ul>
+    </div>
+<!-- </div> -->
+</script>
+<script type='text/ng-template' id='tpl-productColour2'>
+    <ul class="roaster p0">
+        <li class="chatheader active-chat-header p0 border-rad">
+            <div align="center" class="col-md-12 f14 fnormal" ng-show="!activeWindows.length">
+                <div>No Users </div> 
+            </div>
+            <div  align="center" class="col-md-12 f14 fnormal" ng-show="activeWindows.length">
+                <div> Active Chats ... </div>
+            </div>
+        </li>
+        <li ng-repeat="user in contact" ng-click="openchatview(user)" class="">
+            <div align="left" class="padl20 col-md-10 f14" ng-class="activeChatUser == user.id ? 'active' : '' " >{{ user.name }}
+                <br/>
+                <span class='italicFont' ng-if="user.chatState=='closed'">left the conversation</span>
+            </div>
+            <div class="circle col-md-2 ml7" ng-if="getUnReadMessageCount(user) && user.chatState !='closed'" ng-class="activeChatUser == user.id ? 'green' : '' " >{{getUnReadMessageCount(user)}}</div>
+            <div class="circle col-md-3 ml7 red" ng-if="user.chatState =='closed'" ng-click="closeChatFromLeftNav(user)">X</div>
+        </li>
+    </ul>
+
+</script>
+<script type='text/ng-template' id='tpl-confirmation'>
+    <div class="message-backdrop">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-body">
+            <div class="message-text"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success primaryButton">OK</button>
+            <button class="btn btn-danger secondaryButton">Cancel</button>
+        </div>
+      </div>
+    </div>
+</div>
+</script>
+
+    
+   <!--  <div ng-view ="" class="container" align="center"></div> -->
+    
+</body>
+</html>

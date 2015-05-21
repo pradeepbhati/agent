@@ -1,0 +1,18 @@
+<ul class="roaster p0">
+	<li class="chatheader active-chat-header p0 border-rad">
+		<div align="center" class="col-md-12 f14 fnormal" ng-show="!activeWindows.length">
+            <div>No Users </div> 
+		</div>
+        <div  align="center" class="col-md-12 f14 fnormal" ng-show="activeWindows.length">
+            <div> Active Chats ... </div>
+        </div>
+	</li>
+    <li ng-repeat="user in contact" ng-click="openchatview(user)" class="">
+    	<div align="left" class="padl20 col-md-10 f14" ng-class="activeChatUser == user.id ? 'active' : '' " >{{ user.name }}
+    		<br/>
+    		<span class='italicFont' ng-if="user.chatState=='closed'">left the conversation</span>
+    	</div>
+    	<div class="circle col-md-2 ml7" ng-if="getUnReadMessageCount(user) && user.chatState !='closed'" ng-class="activeChatUser == user.id ? 'green' : '' " >{{getUnReadMessageCount(user)}}</div>
+        <div class="circle col-md-3 ml7 red" ng-if="user.chatState =='closed'" ng-click="closeChatFromLeftNav(user)">X</div>
+    </li>
+</ul>

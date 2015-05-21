@@ -1,0 +1,45 @@
+<!-- <div class="col-md-3"> -->
+	<div class="col-md-12" style="padding:0px;">
+		<ul class="chatUL" ng-class="activeChatUser == chatData.threadId ? 'activeChat' : 'inactive'">
+			
+			<li class="chatheader" ng-click="setFocus()">
+				<div class="row">
+					<div class="col-md-10  h11 fw-bold" > {{contact.name}} ({{contact.id}})</div>
+					<div class="col-md-1  closeIcon" ng-click="closeUserChat()"></div>
+				</div>
+			</li>
+			
+			<li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
+				<div style="margin-bottom:10px;">
+					<!-- <span ng-click="loadHistory(chatData.userId)">Load Previous Message</span> -->
+					<div ng-repeat='message in messages'>
+						<div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
+		                	<div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
+		                		{{message.txt}}
+		            		</div>
+		            		<div class='chat-name' ng-if="message.isPromoCode">
+		                		{{getJsonParsedMesg(message.txt).PRMCODE.message}}
+		            		</div>
+		            		<span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
+	        			</div>
+	        			<div align="center" class="clear messageTime" ng-if="message.sender != contact.id" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+	        			<div class='leftConversation clear' ng-if="message.isCloseChatMesg">
+	                		User left the conversation
+	            		</div>
+        			</div>
+    			<!-- <div class="linkBtn">
+    				<a > show new messages</a>
+    			</div> -->
+				
+			</li>
+			
+
+			<!-- Bottom Text Area -->
+			<li ng-click="setFocus()">
+				<div class="chatText col-md-12">
+						<textarea type="text" placeholder="Send a message" class="chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
+				</div>
+			</li>
+		</ul>
+	</div>
+<!-- </div> -->

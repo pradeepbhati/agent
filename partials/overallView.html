@@ -1,0 +1,11 @@
+<div ng-controller='ChatCtrl' class="mt20 row">
+	<div class="col-md-2 p0">
+			<chat-contact-list contact="contact"></chat-contact-list>
+	</div>
+	<div class="col-md-10">
+		<div ng-repeat="chatData in activeWindows" class="col-md-4" style="padding-right: 10px; padding-left: 0px;">
+			<chat-area chat-data="chatData" products="products" contact="contact" templates="templates"></chat-area>
+		</div>
+	</div>
+
+</div>
