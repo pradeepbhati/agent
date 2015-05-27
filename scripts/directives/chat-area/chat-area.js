@@ -254,7 +254,7 @@
                 delete_after: "-1",
                 deleted_on_sender: "false",
                 flags: 0,
-                id: "",
+                id: scope.chatData.messages[0]['id'],
                 last_ts: strTimeMii.substring(0, 10),
                 mid: mid,
                 receiver: scope.contact.id ,
@@ -271,35 +271,71 @@
               scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
               scope.agentMessage = "";
             }
-          }
+          };
 
-          scope.loadHistory = function(userId){
-            alert("History Called for " + userId);  
-            ChatServerService.fetchUserHistory.query({
-              session_id : $rootScope.sessionid,
-              converser : userId,
-              merchant_id : 1
-            }, function success(response){
-              console.log(response.data.messages);
-              if(response && response.data && response.data.messages){
-                //$timeout(function(){
-                  var messageArray = UtilService.syncHistory(response.data.messages);
-                  $timeout(function(){
-                    scope.chatData.messages = messageArray;
-                    scope.messages = messageArray;
-                  })
-                  // $scope.allMessages[userId] = messageArray;
-                  // angular.forEach($scope.activeWindows, function(value, index){
-                  //       if (value.userId == userId){
-                  //         value.messages =  messageArray;
-                  //       }
-                  //     });
-                // });
-              }       
+        //   scope.loadHistory = function(userId){
+        //     alert("History Called for " + userId);  
+        //     ChatServerService.fetchUserHistory.query({
+        //       session_id : $rootScope.sessionid,
+        //       converser : userId,
+        //       merchant_id : 1
+        //     }, function success(response){
+        //       console.log(response.data.messages);
+        //       if(response && response.data && response.data.messages){
+        //         //$timeout(function(){
+        //           var messageArray = UtilService.syncHistory(response.data.messages);
+        //           $timeout(function(){
+        //             scope.chatData.messages = messageArray;
+        //             scope.messages = messageArray;
+        //           })
+        //           // $scope.allMessages[userId] = messageArray;
+        //           // angular.forEach($scope.activeWindows, function(value, index){
+        //           //       if (value.userId == userId){
+        //           //         value.messages =  messageArray;
+        //           //       }
+        //           //     });
+        //         // });
+        //       }       
+        //     }, function failure(error){
+        //       // console.log("Templates could not be loaded.")
+        //     })
+        // };
+
+        scope.loadHistory = function(threadId){
+            scope.showLoader=true;
+            var timeStamp = scope.chatData.messages[0].sent_on;  
+            ChatServerService.fetchUserHistory.query(
+            {
+              // session_id : $rootScope.sessionid,
+              // last_ts : timeStamp,
+              // no_of_messages : Globals.AppConfig.DefaultHistoryFetch,
+              // thread_id : threadId
+            },
+             function success(response){
+              console.log("dkjfdk" + response.data.messages);
+              // var response = {"messages": [{"deleted_on_sender": "False", "via": "whatsapp", "sender": "918123800680", "can_forward": "True", "mid": "4282387057", "delete_after": "-1", "can_download": "True", "sent_on": "1432465934", "last_ts": "1432465934", "txt": "S2l0dGU=", "deleted_on_receiver": "False", "id": "26"}, {"deleted_on_sender": "False", "via": "whatsapp", "sender": "918123800680", "can_forward": "True", "mid": "3846014414", "delete_after": "-1", "can_download": "True", "sent_on": "1432465154", "last_ts": "1432465154", "txt": "WW8gYmFieQ==", "deleted_on_receiver": "False", "id": "23"}, {"deleted_on_sender": "False", "via": "whatsapp", "sender": "918123800680", "can_forward": "True", "mid": "1097298069", "delete_after": "-1", "can_download": "True", "sent_on": "1432464494", "last_ts": "1432464494", "txt": "SGFoYWhhaGE=", "deleted_on_receiver": "False", "id": "21"}, {"deleted_on_sender": "False", "via": "whatsapp", "sender": "918123800680", "can_forward": "True", "mid": "2124841601", "delete_after": "-1", "can_download": "True", "sent_on": "1432464362", "last_ts": "1432464362", "txt": "SnNqc2pzanM=", "deleted_on_receiver": "False", "id": "18"}, {"deleted_on_sender": "False", "via": "whatsapp", "sender": "918123800680", "can_forward": "True", "mid": "1723054634", "delete_after": "-1", "can_download": "True", "sent_on": "1432464279", "last_ts": "1432464279", "txt": "SnNqc2pzanM=", "deleted_on_receiver": "False", "id": "16"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "3133779461", "delete_after": "-1", "can_download": "True", "sent_on": "1432463267", "last_ts": "1432463267", "txt": "T2hrIGhlcm9pbmU=", "deleted_on_receiver": "False", "id": "14"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "2958679951", "delete_after": "-1", "can_download": "True", "sent_on": "1432463225", "last_ts": "1432463225", "txt": "SGVybw==", "deleted_on_receiver": "False", "id": "12"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "3600249665", "delete_after": "-1", "can_download": "True", "sent_on": "1432461356", "last_ts": "1432461356", "txt": "SGV5", "deleted_on_receiver": "False", "id": "9"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "391993304", "delete_after": "-1", "can_download": "True", "sent_on": "1432356542", "last_ts": "1432356542", "txt": "SGk=", "deleted_on_receiver": "False", "id": "11"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "738582507", "delete_after": "-1", "can_download": "True", "sent_on": "1432356517", "last_ts": "1432356517", "txt": "SGV5", "deleted_on_receiver": "False", "id": "10"}, {"deleted_on_sender": "False", "via": "app", "sender": "918123800680", "can_forward": "True", "mid": "1919608118", "delete_after": "-1", "can_download": "True", "sent_on": "1432356516", "last_ts": "1432356516", "txt": "eydmZF9wcm9maWxlJzogJ2h0dHBzOi8vbWFnaWNhcHAuZnJlc2hkZXNrLmNvbS9jb250YWN0cy82MDAwNTE4OTc3J30=", "deleted_on_receiver": "False", "id": "8"}]};
+              if(response &&  response.messages){
+                  var messageArray = UtilService.syncHistory(response.messages, '9591418090');
+                  if(messageArray.length){
+                    $timeout(function(){
+                      angular.forEach(messageArray, function(value, index){
+                        scope.chatData.messages.unshift(value);
+                      })
+                      scope.messages =  scope.chatData.messages;
+                    })
+                  }
+                  else{
+                    $timeout(function(){
+                      scope.showHistory = false;
+                    })
+                  }
+              }
+              scope.showLoader=false;       
             }, function failure(error){
-              // console.log("Templates could not be loaded.")
+              scope.showLoader=false;  
+              console.log("History could not be loaded.")
             })
-        }
+        };
 
           
 

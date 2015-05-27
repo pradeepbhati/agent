@@ -65,9 +65,11 @@
 					$rootScope.stropheStatus = status;
 					switch(status){
 						case Strophe.Status.CONNECTING:
+							$rootScope.isLogin = $scope.isLogin = true;
 							$scope.chatConnectionStatus = "Connecting";
 							break;
 						case Strophe.Status.CONNECTED:
+							$rootScope.isLogin = $scope.isLogin = true;
 							$scope.chatConnectionStatus = "Connected";
 							$scope.connectedState();
 							break;

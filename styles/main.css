@@ -2,7 +2,7 @@ body{
 	font-size: 16px;
 	color: #5c6467;
 	font-family: 'Open Sans',Arial,sans-serif;
-	background: #f8fafb;
+	/*background: #f8fafb;*/
 	padding: 0;
 	margin: 0;
 	font-weight: 400;
@@ -177,8 +177,8 @@ ul li{
 .border-rad{border-radius: 1px 1px 0 0 !important;}
 
 .activeChat .chatheader, .active-chat-header{
-	background-color: #00b8ff !important;
-	border-bottom: solid 1px #00b8ff !important;
+	background-color: #1D9C73 !important ; /*//#00b8ff*/
+	border-bottom: solid 1px #1D9C73 !important;
 	color: #fff !important;
 }
 
@@ -819,32 +819,34 @@ background-image: -webkit-gradient(
 .logoutDiv{
 	background-color: #fff;
 	width: 10%;
-	border: solid 1px #00B8FF;
+	border: solid 1px #1D9C73;/*#00B8FF*/
 	border-radius: 5px;
 	height: 29px;
 }
 
 .logout{
-	border-left: solid 1px #00B8FF;
+	border-left: solid 1px #1D9C73; /*#00B8FF*/
 	font-size: 15px;
-	color: #5c6467;
+	color: #1D9C73;
 	margin-left: 23px;
 	padding: 6px;
 	cursor: pointer;
+	font-weight: 600;
 }
 
 .logout:hover{
 	color: #fff ;
-	background :#00B8FF ;
+	background :#1D9C73;
 }
 
 .user{
 	height: 20px;
 	width: 21px;
-	background: url(../images/userProfile.png);
-	background-repeat: no-repeat;
+	color: #1D9C73;
+	/*background: url(../images/userProfile.png);
+	background-repeat: no-repeat;*/
 	float: left;
-	margin-top: 4px;
+	margin-top: 6px;
 	margin-left: -5px;
 }
 .clear{
@@ -939,7 +941,7 @@ background-image: -webkit-gradient(
 	  margin: 0 auto;
 	  padding: 20px 20px 20px;
 	  width: 420px;
-	  background: white;
+	  background: #f8fafb;
 	  border-radius: 3px;
 	  -webkit-box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
 	  box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);

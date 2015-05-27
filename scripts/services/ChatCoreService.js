@@ -17,13 +17,13 @@
         isSpecialMessage = response['isSpecialMessage'];
       }
       var jid = Strophe.getBareJidFromJid(full_jid);
-      var jid_id = UtilService.getJidToId(jid);
+      // var jid_id = UtilService.getJidToId(jid);
 
       var MessID='mid-'+messageId;
        if (body) {
         var timeInMilliSeconds = messageId.substr(messageId.lastIndexOf('-') + 1, messageId.length);
         var strTimeMii = timeInMilliSeconds.toString().substring(0, 10);
-        UtilService.addMessage($rootScope.plustxtId, jid, body, strTimeMii, messageId, isSpecialMessage, threadId);
+        UtilService.addMessage($rootScope.plustxtId, full_jid, body, strTimeMii, messageId, isSpecialMessage, threadId);
         //UtilService.updateMessageStatus(messageId, 2, Strophe.getNodeFromJid(jid), UtilService.getTimeInLongString());
       }  
     };
@@ -265,7 +265,7 @@
                 body=offmessageArray[i]['body'];
                 threadId = offmessageArray[i]['threadId'];
 
-                message = $msg({to: jid, "type": "chat", "id": mid}).c('body').t(body).up().c('thread').t(threadId).up().c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up()
+                message = $msg({to: offmessageArray[i]['id'], "type": "chat", "id": mid}).c('body').t(body).up().c('thread').t(threadId).up().c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up()
                 .c('request', {xmlns: 'urn:xmpp:receipts'}).up().c('meta').c('acl', {deleteafter: "-1", canforward: "1", candownload: "1"});
                 $rootScope.chatSDK.connection.send(message);
                timeInMilliSecond = UtilService.getTimeInLongString();

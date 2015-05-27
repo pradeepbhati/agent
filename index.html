@@ -20,7 +20,7 @@
     <link href="styles/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font-Awesome for Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     
     <!-- Main CSS -->
     <link href="styles/main.css" rel="stylesheet">
@@ -72,7 +72,7 @@
                 <div class="col-md-1"> Logo</div>
                 <div class="col-md-9 fw-bold mt5 f18 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
                 <div class="col-md-2 logoutDiv"  align="center" ng-if="isLogin">
-                    <div class="user"></div>
+                    <div class="fa fa-lg fa-user user"></div>
                     <div  ng-click="logout()"  class="logout">Logout</div>
                 </div>
             </div>
@@ -140,11 +140,12 @@
             
             <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
                 <div style="margin-bottom:10px;">
-                    <!-- <span ng-click="loadHistory(chatData.userId)">Load Previous Message</span> -->
+                    <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
                     <div ng-repeat='message in messages'>
                         <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
                             <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
-                                {{message.txt}}
+                                <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-android'"></i>
+                                {{message.txt}} {{message.via}}
                             </div>
                             <div class='chat-name' ng-if="message.isPromoCode">
                                 {{getJsonParsedMesg(message.txt).PRMCODE.message}}

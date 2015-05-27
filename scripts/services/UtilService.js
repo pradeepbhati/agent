@@ -132,6 +132,7 @@
 	            messageObj['delete_after'] = value['delete_after'];
 	            messageObj['last_ts'] = value['last_ts'];
 	            messageObj['sent_on'] = value['sent_on'];
+	            messageObj['via'] = value['via'] ? value['via'].toLowerCase() : "whatsapp";
 	            try{
 	                messageObj['txt'] = decode64(value['txt']);
 	            }
@@ -150,7 +151,8 @@
 	            else
 	                state = 0;
 	            messageObj['state'] = state;//0-sending;1-sent;2-Delivered;3-read
-	            if(value['sender'] && value['receiver']){
+	            //if(value['sender'] && value['receiver']){
+            	if(value['sender']){
 	                messageArray.push(messageObj);
 	            }
         	})
@@ -169,6 +171,7 @@
 	            {
 	                if (messageArray[key1]['state'] == -1) {      
 	                    offlinemessage = {};
+	                    offlinemessage['id'] = messageArray[key1]['id'];
 	                    offlinemessage['tegoid'] = messageArray[key1]['receiver'];
 	                    offlinemessage['body'] = messageArray[key1]['txt']
 	                    offlinemessage['mid'] = messageArray[key1]['mid'];
@@ -217,9 +220,10 @@
 			return midread;
 		};
 
-    	var addMessage = function(inRecieverJID, inSenderJID, inMessage, inTime, mid, isSpecialMessage, threadId) {
+    	var addMessage = function(inRecieverJID, fullJID, inMessage, inTime, mid, isSpecialMessage, threadId) {
         	var otherpartyid;
 	        var messagelist = [];
+	        var inSenderJID = Strophe.getBareJidFromJid(fullJID);
 	        var receiverTigoId = inRecieverJID.substring(0, inRecieverJID.lastIndexOf('@'));
 	        var senderTigoId = inSenderJID.substring(0, inSenderJID.lastIndexOf('@'));
 	        var messageobj = {};
@@ -231,7 +235,7 @@
 	        messageobj['last_ts'] = inTime;
 	        messageobj['sent_on'] = inTime;
 	        messageobj['txt'] = inMessage;
-	        messageobj['id'] = "";
+	        messageobj['id'] = fullJID;
 	        messageobj['mid'] = mid;
 	        messageobj['flags'] = 0;//0-sent;1-recieved
 	        messageobj['state'] = 0;//0-sending;1-sent;2-Delivered;3-read

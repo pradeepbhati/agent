@@ -11,10 +11,11 @@
 			
 			<li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
 				<div style="margin-bottom:10px;">
-					<!-- <span ng-click="loadHistory(chatData.userId)">Load Previous Message</span> -->
+					<span ng-click="loadHistory(chatData.userId)">Load Previous Message</span>
 					<div ng-repeat='message in messages'>
 						<div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
 		                	<div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
+		                		<i class="fa fa-whatsapp"></i>
 		                		{{message.txt}}
 		            		</div>
 		            		<div class='chat-name' ng-if="message.isPromoCode">

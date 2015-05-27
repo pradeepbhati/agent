@@ -37,7 +37,7 @@
 				 	password: $scope.password
 				 }
 				 $rootScope.user = user;
-				 $rootScope.isLogin = $scope.isLogin = true;
+				 // $rootScope.isLogin = $scope.isLogin = true;
 				 $rootScope.$broadcast('chatConnet')
 			}
 		};
