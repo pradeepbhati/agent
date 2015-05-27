@@ -41,6 +41,7 @@
 
 
     <script src="scripts/app.js"></script>
+    <script src="scripts/services/PanelAuthService.js"></script>
     <script src="scripts/controllers/loginCtrl.js"></script>
     <script src="scripts/controllers/AppCtrl.js"></script>
     <script src="scripts/controllers/ChatCtrl.js"></script>
@@ -84,9 +85,9 @@
             <div class="loginBox">
                 <form class="form-horizontal ">
                     <div class="form-group">
-                        <label for="inputEmail" class="control-label col-xs-3">Email</label>
+                        <label for="inputEmail" class="control-label col-xs-3">Username</label>
                         <div class="col-xs-9">
-                            <input type="text" class="form-control" id="inputEmail" placeholder="Email" ng-model="username">
+                            <input type="text" class="form-control" id="inputEmail" placeholder="Username" ng-model="username">
                             <div ng-if="usernameError" class="error">{{usernameError}}</div>
                         </div>
                     </div>

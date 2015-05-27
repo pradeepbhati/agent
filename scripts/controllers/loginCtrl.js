@@ -1,12 +1,12 @@
 (function(angular){
 	"use strict";
-	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location' ,
-		function($scope, $rootScope, $location){
+	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location', 'PanelAuthService', 'MessageService',
+		function($scope, $rootScope, $location, PanelAuthService, MessageService){
 
 		function validateLogin(){
 			var isValid = true;
 			$scope.usernameError = $scope.passwordError = "";
-			if(!$scope.username){ $scope.usernameError  =  "Please enter your email"}
+			if(!$scope.username){ $scope.usernameError  =  "Please enter your username"}
 			if(!$scope.password){ $scope.passwordError  =  "Please enter password"}
 			if($scope.usernameError || $scope.passwordError){
 				isValid = false;
@@ -14,31 +14,39 @@
 			return isValid;
 		};
 
-		// function aunthenticateUSer(){
-		// 	var isValid = validateLogin();
-		// 	if(validateLogin()){
-		// 		if($scope.username && $scope.password){
-		// 			if(($scope.username.trim() !== "pradeep@104.131.98.86" && $scope.password.trim() !== "pradeep") 
-		// 			|| ($scope.username !== "pradeep1@104.131.98.86" && $scope.password !== "pradeep1")){
-		// 				$scope.usernameError =" Please enter valid username and Pwd";
-		// 			}
-		// 		}
-		// 		if($scope.usernameError){
-		// 			isValid = false;
-		// 		}
-		// 	}
-		// 	return isValid;
-		// }
+		$scope.loginToPanel = function(){
+			PanelAuthService.agentPanelLogin.query({
+				username : $scope.username,
+				password : $scope.password
+			}, function success(response){
+				if(response.status === 1 && response.key){
+					var user = {
+				 		name : $scope.username,
+				 		password: $scope.password,
+				 		token: response.key
+				 	}
+				 	$rootScope.user = user;
+				 	$rootScope.isLogin = $scope.isLogin = true;
+				 	$rootScope.$broadcast('chatConnet');
+				}
+				else{
+					MessageService.displayError("Some error occured while logging in. Please ");
+				}
+			}, function failure(error){
+				if(error.status === 400){
+					if(error.data && error.data.username){
+						$scope.usernameError = error.data.username[0];
+					}
+					else if(error.data && error.data.password){
+						$scope.passwordError  = error.data.password[0];
+					}
+				}
+			})
+		};
 
 		$scope.logIn  = function(){
 			if(validateLogin()){
-				 var user = {
-				 	name : $scope.username,
-				 	password: $scope.password
-				 }
-				 $rootScope.user = user;
-				 // $rootScope.isLogin = $scope.isLogin = true;
-				 $rootScope.$broadcast('chatConnet')
+				$scope.loginToPanel();
 			}
 		};
 	}])
