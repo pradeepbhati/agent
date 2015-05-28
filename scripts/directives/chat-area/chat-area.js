@@ -303,8 +303,8 @@
 
         scope.loadHistory = function(threadId){
             scope.showLoader=true;
-            var timeStamp = scope.chatData.messages[0].sent_on;  
-            ChatServerService.fetchUserHistory.query(
+            var timeStamp = scope.chatData.messages[0].sent_on;
+            ChatServerService.fetchUserHistory($rootScope.user.token).query(
             {
               // session_id : $rootScope.sessionid,
               // last_ts : timeStamp,

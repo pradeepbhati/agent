@@ -21,28 +21,6 @@
 					$rootScope.logoutRequestRaised = null;
 				};
 
-				$scope.logout = function(){
-					try  {
-						if(!$rootScope.logoutRequestRaised){
-							IntimationService.agentLogoutRequest.query({
-								session_id : $rootScope.sessionid
-							}, function success(response){
-								if(response.message == "success" && response.status === 0){
-									$rootScope.$broadcast("Agent-Logout-Request");
-								}
-							}, function failure(error){
-								MessageService.displayError("Logout request could not be made.");
-							})
-						}
-						else{
-							$rootScope.$broadcast("Agent-Logout-Request");
-						}
-					}
-					catch(e){
-						$scope.forceLogout("Logging Out.")
-					}
-				};
-
 				$rootScope.$on('ChatMultipleSession', function(event){
 					var statusMessage = "It seems you are logged in from another place. Going to logout";
 					$scope.forceLogout(statusMessage);
@@ -50,7 +28,6 @@
 
 				$scope.forceLogout = function(statusMessage){
 					$timeout(function(){
-						console.log('test' + statusMessage);
 						$scope.chatConnectionStatus = statusMessage;
 						if($rootScope.chatSDK && $rootScope.chatSDK.connection){
 							$rootScope.chatSDK.connection.send($pres({"type": "unavailable"}));
@@ -117,14 +94,14 @@
 				$scope.getChatServerCredentials = function(){
 					PanelAuthService.chatServerCredentials($rootScope.user.token).query({}, 
 						function success(response){
-							if(response.status === 1 && response.username && response.password){
+							//if(response.status == 1 && response.username && response.password){
 								$rootScope.tigoId = response.username;
 								$rootScope.password = response.password + response.username.substring(0,3);
 								$scope.loginToChatServer();
-							}
-							else{
-								MessageService.displayError("Some error occured while fetching chat server details.");
-							}
+							//}
+							// else{
+							// 	MessageService.displayError("Some error occured while fetching chat server details.");
+							// }
 						}, 
 						function failure(error){
 							MessageService.displayError("Chat Server user details could not be fetched.");
@@ -139,12 +116,17 @@
 				});
 
 				$scope.logout = function(){
-					$scope.init();
-					$rootScope.isLogin = $scope.isLogin = false;
-					$rootScope.user = null;
-					$scope.forceLogout("Logging Out.");
-					window.location= window.location.href;
-
+					PanelAuthService.agentPanelLogout.query({
+						key : $rootScope.user.token
+					}, function success(response){
+						$scope.init();
+						$rootScope.isLogin = $scope.isLogin = false;
+						$rootScope.user = null;
+						$scope.forceLogout("Logging Out.");
+						window.location= window.location.href;
+					}, function failure(error){
+						MessageService.displayError("Some error occured while logging out.");
+					})
 				}
 				
 			}

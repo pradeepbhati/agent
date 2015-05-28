@@ -19,7 +19,7 @@
 				username : $scope.username,
 				password : $scope.password
 			}, function success(response){
-				if(response.status === 1 && response.key){
+				//if(response.status === 1 && response.key){
 					var user = {
 				 		name : $scope.username,
 				 		password: $scope.password,
@@ -28,10 +28,10 @@
 				 	$rootScope.user = user;
 				 	$rootScope.isLogin = $scope.isLogin = true;
 				 	$rootScope.$broadcast('chatConnet');
-				}
-				else{
-					MessageService.displayError("Some error occured while logging in. Please ");
-				}
+				// }
+				// else{
+					//MessageService.displayError("Some error occured while logging in. Please ");
+				//}
 			}, function failure(error){
 				if(error.status === 400){
 					if(error.data && error.data.username){

@@ -25,15 +25,26 @@
 		  }
 		});
 
-		var fetchUserHistory = $resource(Globals.AppConfig.GetUserHistory, {}, {
-		  query: {
-		    method:'POST',
-		    isArray: false, 
-		    params:{}, 
-		    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
-		    transformRequest: manageReqPacketTransform
-		  }
-		});
+		var fetchUserHistory = function(token){
+			return $resource(Globals.AppConfig.GetUserHistory, null, {
+	            query: {
+	                method: 'GET',
+	                headers: {
+	                    'Authorization': token
+	                }
+	            }
+	        })
+		};
+
+		// var fetchUserHistory = $resource(Globals.AppConfig.GetUserHistory, {}, {
+		//   query: {
+		//     method:'POST',
+		//     isArray: false, 
+		//     params:{}, 
+		//     headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+		//     transformRequest: manageReqPacketTransform
+		//   }
+		// });
 
 		ChatServerService = {
       		login: chatServerLogin,
