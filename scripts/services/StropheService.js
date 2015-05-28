@@ -11,6 +11,10 @@
 				$rootScope.$emit("StropheStatusChange", status, connect);
 			})
 		};
+		var disconnect = function(connection){
+			connection.disconnect('Loging out');
+		};
+
 		var connectionStatus = function(status){
 			var statusMesg = "";
 			switch(status.toString()){
@@ -44,9 +48,10 @@
 
 			}
 			return statusMesg;
-		}
+		};
 		StropheService = {
       		connection: connection,
+      		disconnect : disconnect,
       		connectionStatus : connectionStatus 
       	}
 		return StropheService;

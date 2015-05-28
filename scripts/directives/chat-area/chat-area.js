@@ -10,6 +10,7 @@
         link: function(scope, element, attrs) {         
           scope.templates = scope.templates;
           scope.contact = scope.contact[scope.chatData.threadId];
+          //scope.contact.id = scope.contact.id.substring(2,scope.contact.id.length);
           scope.messages = scope.chatData.messages;
 
           scope.openDefaultTemplates = function(){
@@ -304,7 +305,8 @@
         scope.loadHistory = function(threadId){
             scope.showLoader=true;
             var timeStamp = scope.chatData.messages[0].sent_on;
-            ChatServerService.fetchUserHistory($rootScope.user.token).query(
+            var contactId = scope.contact.id;
+            ChatServerService.fetchUserHistory($rootScope.user.token, contactId).query(
             {
               // session_id : $rootScope.sessionid,
               // last_ts : timeStamp,

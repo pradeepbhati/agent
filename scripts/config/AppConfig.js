@@ -9,7 +9,7 @@ var Globals = {
     ChatServerConnect :  chatHostBaseURI + "/accounts/connect/",
     StropheConnect : chatHostBaseURI  + "/http-bind/",
     CloseChatMessage : '{"CLSCHAT" : "chat closed"}',
-    GetUserHistory : "http://52.24.240.75/messages/get-messages/9591418090/",
+    GetUserHistory : "http://52.24.240.75/messages/get-messages/",
     PanelLoginUrl: "http://agent.magictiger.com/api/accounts/agent/login/",
     PanelLogoutUrl: "http://agent.magictiger.com/api/accounts/agent/logout/",
     AgentChatCredentials: "http://agent.magictiger.com/api/messaging/chatuser/"

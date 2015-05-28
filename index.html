@@ -138,22 +138,26 @@
                     <div class="col-md-1  closeIcon" ng-click="closeUserChat()"></div>
                 </div>
             </li>
+            <li>
+              <div class="fixheader" align="center">
+              <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a></div>
+            </li>
             
             <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
                 <div style="margin-bottom:10px;">
-                    <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
+                    
                     <div ng-repeat='message in messages'>
                         <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
                             <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
-                                <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-android'"></i>
-                                {{message.txt}} {{message.via}}
+                                <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-laptop'"></i>
+                                {{message.txt}}
                             </div>
                             <div class='chat-name' ng-if="message.isPromoCode">
                                 {{getJsonParsedMesg(message.txt).PRMCODE.message}}
                             </div>
                             <span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
                         </div>
-                        <div align="center" class="clear messageTime" ng-if="message.sender != contact.id" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+                        <div align="center" class="clear " ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
                         <div class='leftConversation clear' ng-if="message.isCloseChatMesg">
                             User left the conversation
                         </div>

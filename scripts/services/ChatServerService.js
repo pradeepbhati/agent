@@ -25,8 +25,8 @@
 		  }
 		});
 
-		var fetchUserHistory = function(token){
-			return $resource(Globals.AppConfig.GetUserHistory, null, {
+		var fetchUserHistory = function(token,contact){
+			return $resource(Globals.AppConfig.GetUserHistory+contact +"/", null, {
 	            query: {
 	                method: 'GET',
 	                headers: {

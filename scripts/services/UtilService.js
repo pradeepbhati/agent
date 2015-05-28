@@ -151,8 +151,8 @@
 	            else
 	                state = 0;
 	            messageObj['state'] = state;//0-sending;1-sent;2-Delivered;3-read
-	            //if(value['sender'] && value['receiver']){
-            	if(value['sender']){
+	            if(value['sender'] && value['receiver']){
+            	//if(value['sender']){
 	                messageArray.push(messageObj);
 	            }
         	})
@@ -220,12 +220,13 @@
 			return midread;
 		};
 
-    	var addMessage = function(inRecieverJID, fullJID, inMessage, inTime, mid, isSpecialMessage, threadId) {
+    	var addMessage = function(inRecieverJID, fullJID, inMessage, inTime, mid, isSpecialMessage, threadId, via) {
         	var otherpartyid;
 	        var messagelist = [];
 	        var inSenderJID = Strophe.getBareJidFromJid(fullJID);
 	        var receiverTigoId = inRecieverJID.substring(0, inRecieverJID.lastIndexOf('@'));
 	        var senderTigoId = inSenderJID.substring(0, inSenderJID.lastIndexOf('@'));
+	        senderTigoId = senderTigoId.length == 12  &&  senderTigoId.substring(0,2) == 91 ? senderTigoId.substring(2, senderTigoId.length) : senderTigoId;
 	        var messageobj = {};
 	        messageobj['deleted_on_sender'] = "false";
 	        messageobj['sender'] = senderTigoId;
@@ -241,6 +242,7 @@
 	        messageobj['state'] = 0;//0-sending;1-sent;2-Delivered;3-read
 	        messageobj['isProductDetails'] = false;
 	        messageobj['isCloseChatMesg'] = false;
+	        messageobj['via'] = via ? via : '';
 	        if(threadId){
 	        	messageobj['threadId'] = threadId;
 	    	}

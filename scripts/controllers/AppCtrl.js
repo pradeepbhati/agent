@@ -31,9 +31,10 @@
 						$scope.chatConnectionStatus = statusMessage;
 						if($rootScope.chatSDK && $rootScope.chatSDK.connection){
 							$rootScope.chatSDK.connection.send($pres({"type": "unavailable"}));
+							StropheService.disconnect($rootScope.chatSDK.connection);
 							$rootScope.chatSDK.connection = null;
+							window.location= window.location.href;
 						}
-						// window.location=Globals.AppConfig.logoutUrl;
                 	});
 				};
 
@@ -53,8 +54,8 @@
 						case Strophe.Status.DISCONNECTING:
 							break;
 						case Strophe.Status.DISCONNECTED:
-							$scope.init();
-							$scope.loginToChatServer();
+							// $scope.init();
+							// $scope.loginToChatServer();
 							break;
 						case Strophe.Status.AUTHENTICATING:
 							break;
@@ -94,14 +95,14 @@
 				$scope.getChatServerCredentials = function(){
 					PanelAuthService.chatServerCredentials($rootScope.user.token).query({}, 
 						function success(response){
-							//if(response.status == 1 && response.username && response.password){
+							if(response.username && response.password){
 								$rootScope.tigoId = response.username;
 								$rootScope.password = response.password + response.username.substring(0,3);
 								$scope.loginToChatServer();
-							//}
-							// else{
-							// 	MessageService.displayError("Some error occured while fetching chat server details.");
-							// }
+							}
+							else{
+								MessageService.displayError("Some error occured while fetching chat server details.");
+							}
 						}, 
 						function failure(error){
 							MessageService.displayError("Chat Server user details could not be fetched.");
@@ -123,7 +124,7 @@
 						$rootScope.isLogin = $scope.isLogin = false;
 						$rootScope.user = null;
 						$scope.forceLogout("Logging Out.");
-						window.location= window.location.href;
+						
 					}, function failure(error){
 						MessageService.displayError("Some error occured while logging out.");
 					})

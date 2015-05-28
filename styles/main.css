@@ -460,7 +460,7 @@ ul li{
 	padding: 0 0 0 0;
 }
 .chatArea{
-	height: 485px;
+	height: 462px;
 	overflow-y:	auto; 
 	padding-top: 10px
 }
@@ -954,3 +954,17 @@ background-image: -webkit-gradient(
 	text-align: left;
 }
 
+.fixheader {
+   	position: relative;     
+    height: 20px;     
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.messageTimeLeft{
+	margin-left: 10%;
+	float: left;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}

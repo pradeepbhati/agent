@@ -13,6 +13,7 @@
       var messageId = response['id'];
       var threadId = response['threadId'];
       var isProductDetails = false;
+      var via = response['via'];
       if(response['id']){
         isSpecialMessage = response['isSpecialMessage'];
       }
@@ -23,7 +24,7 @@
        if (body) {
         var timeInMilliSeconds = messageId.substr(messageId.lastIndexOf('-') + 1, messageId.length);
         var strTimeMii = timeInMilliSeconds.toString().substring(0, 10);
-        UtilService.addMessage($rootScope.plustxtId, full_jid, body, strTimeMii, messageId, isSpecialMessage, threadId);
+        UtilService.addMessage($rootScope.plustxtId, full_jid, body, strTimeMii, messageId, isSpecialMessage, threadId, via);
         //UtilService.updateMessageStatus(messageId, 2, Strophe.getNodeFromJid(jid), UtilService.getTimeInLongString());
       }  
     };
@@ -127,7 +128,7 @@
          parameter description   : 
          */
         on_message: function(message) {
-            console.log("ChatCoreService @on_message called :");
+            console.log("ChatCoreService @on_message called :", message);
             var threadId = null;
             if($(message).find("thread")){
               threadId = $(message).find("thread").text();
@@ -161,6 +162,7 @@
             var jid = $(message).attr('from');
             if(!threadId){
               threadId = Strophe.getNodeFromJid(jid);
+              response['via'] = Strophe.getResourceFromJid(jid);
             }
             else{
               var res = threadId.match(/-/gi);
