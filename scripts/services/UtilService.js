@@ -139,7 +139,7 @@
 	            catch(e){
 	                
 	            }
-	            messageObj['id'] = value['id'];
+	            messageObj['id'] = value['receiver'] + '@' + Globals.AppConfig.ChatHostURI + "/" + value['via'];
 	            messageObj['mid'] = value['mid'];
 	            messageObj['flags'] = 0;
 	            if (value['read_on'] != undefined)

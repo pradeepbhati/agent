@@ -38,11 +38,11 @@
     				$timeout(function(){
     					var closeChatUserIndex;
     					
-    					if($scope.contact[threadId].chatState != "closed"){
-    						$scope.contact[threadId].chatState = "closed";
-    						var userId = $scope.contact[threadId].id;
-	    					UtilService.chatClosed($rootScope.sessionid, userId, "",  threadId);
-    					}
+    					// if($scope.contact[threadId].chatState != "closed"){
+    					// 	$scope.contact[threadId].chatState = "closed";
+    					// 	var userId = $scope.contact[threadId].id;
+	    				// 	UtilService.chatClosed($rootScope.sessionid, userId, "",  threadId);
+    					// }
     					angular.forEach($scope.activeWindows, function(value, index){
     						if(value.threadId == threadId){
     							closeChatUserIndex = index;

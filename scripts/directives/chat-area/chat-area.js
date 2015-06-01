@@ -46,17 +46,19 @@
             if(scope.contact.chatState != "closed"){
               MessageService.confirm("Are you sure you want to close conversation with " + scope.contact.name + " ?")
               .then(function() {
-                var body = {CLSCHAT : "chat closed" };
-                body = UtilService.stringifyEmitUnicode(body, true);
-                scope.agentMessage = body;
-                scope.submitMessage(false);
+                $rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
+                // var body = {CLSCHAT : "chat closed" };
+                // body = UtilService.stringifyEmitUnicode(body, true);
+                // scope.agentMessage = body;
+                // scope.submitMessage(false);
               });
             }
             else{
-              var body = {CLSCHAT : "chat closed" };
-              body = UtilService.stringifyEmitUnicode(body, true);
-              scope.agentMessage = body;
-              scope.submitMessage(false);
+              $rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
+              // var body = {CLSCHAT : "chat closed" };
+              // body = UtilService.stringifyEmitUnicode(body, true);
+              // scope.agentMessage = body;
+              // scope.submitMessage(false);
             }
           }
 
@@ -249,13 +251,14 @@
               var strTimeMii = timeInMilliSecond.toString();
               var messageId = scope.agentId + "-c-" + strTimeMii;
               var mid = messageId.toString();
+              var id = scope.chatData.threadId + '@' + Globals.AppConfig.ChatHostURI + "/" + 'whatsapp';
 
               var message = {
                 can_forward: "true",
                 delete_after: "-1",
                 deleted_on_sender: "false",
                 flags: 0,
-                id: scope.chatData.messages[0]['id'],
+                id: id,
                 last_ts: strTimeMii.substring(0, 10),
                 mid: mid,
                 receiver: scope.contact.id ,
