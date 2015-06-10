@@ -1,8 +1,8 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-		.controller('AppCtrl', ['$scope', '$rootScope', 'ChatServerService', 'StropheService', 'ChatCoreService', 'PanelAuthService', 'MessageService', 'TemplateService','UtilService', 'IntimationService', '$timeout',
-			function ($scope, $rootScope, ChatServerService, StropheService, ChatCoreService, PanelAuthService, MessageService, TemplateService, UtilService, IntimationService, $timeout) {
+		.controller('AppCtrl', ['$scope', '$rootScope', 'ChatServerService', 'StropheService', 'ChatCoreService', 'PanelAuthService', 'MessageService', 'TemplateService','UtilService', 'IntimationService', '$timeout', '$cookieStore',
+			function ($scope, $rootScope, ChatServerService, StropheService, ChatCoreService, PanelAuthService, MessageService, TemplateService, UtilService, IntimationService, $timeout, $cookieStore) {
 
 				$scope.init =function(){
 					// $rootScope.bargainAgent = user;
@@ -11,15 +11,31 @@
 					$rootScope.sessionid = null;
 					$rootScope.tigoId = null;
 					$rootScope.resourceId = null;
-					$rootScope.plustxtcacheobj = {};
-					$rootScope.plustxtcacheobj.contact = {};
-					$rootScope.plustxtcacheobj.message = {};
-					$rootScope.plustxtcacheobj.products = {};
+					if(!$rootScope.plustxtcacheobj) {
+						$rootScope.plustxtcacheobj = {};
+						$rootScope.plustxtcacheobj.contact = {};
+						$rootScope.plustxtcacheobj.message = {};
+						$rootScope.plustxtcacheobj.products = {};
+					}
 					$rootScope.flashMessage = "";
 					$rootScope.password = null;
 					$rootScope.usersCount = 0;
 					$rootScope.logoutRequestRaised = null;
 				};
+
+               function saveState() {
+		  if($rootScope.isLogin) { 
+		  	sessionStorage.agentId = angular.toJson($rootScope.tigoId);
+		  }
+               };
+
+               $rootScope.$on("savestate", saveState);
+
+               function restoreState() {
+		 $rootScope.tigoId = angular.fromJson(sessionStorage.tigoId);
+               };
+
+               if (sessionStorage.tigoId) restoreState();				
 
 				$rootScope.$on('ChatMultipleSession', function(event){
 					var statusMessage = "It seems you are logged in from another place. Going to logout";
@@ -121,6 +137,8 @@
 						key : $rootScope.user.token
 					}, function success(response){
 						$scope.init();
+						$cookieStore.remove('agentKey');
+						sessionStorage.clear();
 						$rootScope.isLogin = $scope.isLogin = false;
 						$rootScope.user = null;
 						$scope.forceLogout("Logging Out.");

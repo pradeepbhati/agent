@@ -125,10 +125,16 @@
             </div>
 
         </div>
+	<div class="mt20 row" ng-if="isLogin">
+	  <div class="col-md-12">
+	  	<iframe width="100%" height="400" src="https://docs.google.com/spreadsheets/d/1MoHxYu4suH5vzUapw9B_fg2OOZYIQnBfmC94lgtqxLk/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+	  </div>
+	</div>
     </div>
 
     <!-- <div class="col-md-3"> -->
 <script type='text/ng-template' id='tpl-productColour'>
+
     <div class="col-md-12" style="padding:0px;">
         <ul class="chatUL" ng-class="activeChatUser == chatData.threadId ? 'activeChat' : 'inactive'">
             
@@ -218,6 +224,5 @@
 
     
    <!--  <div ng-view ="" class="container" align="center"></div> -->
-    
 </body>
 </html>

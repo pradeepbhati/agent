@@ -7,6 +7,45 @@
     			$scope.contact = $rootScope.plustxtcacheobj.contact;
     			$scope.products = $rootScope.plustxtcacheobj.products;
     			$scope.templates = $rootScope.templates;
+
+               function saveState() {
+		  if($rootScope.isLogin) {
+                  	sessionStorage.plustxtcacheobj = angular.toJson($rootScope.plustxtcacheobj);
+		  }
+               };
+
+               $rootScope.$on("savestate", saveState);
+
+               function restoreState() {
+		$scope.agentId = $rootScope.tigoId;
+		$rootScope.plustxtcacheobj = angular.fromJson(sessionStorage.plustxtcacheobj); 
+                var chatObj = $rootScope.plustxtcacheobj; 
+		$scope.contact = chatObj.contact;
+                $scope.allMessages = chatObj.message;
+                $scope.products = chatObj.products;
+                if($scope.activeWindows.length < Globals.AppConfig.ConcurrentChats){
+                                                angular.forEach($scope.allMessages, function(val, key){
+                                                        var contactExists = false;
+                                                        angular.forEach($scope.activeWindows, function(value, index){
+                                                                if (value.threadId == key){
+                                                                        value.messages =  val;
+                                                                        contactExists = true;
+                                                                }
+                                                        });
+                                                        if(!contactExists){
+                                                                if($scope.activeWindows.length == 0){
+                                                                        $scope.activeChatUser = key;
+                                                                }
+                                                                var conversation = {};
+                                                                conversation.threadId = key;
+                                                                conversation.messages =  val;
+                                                                $scope.activeWindows.push(conversation);
+                                                        }
+                                                })
+                                            }
+               };
+
+               if (sessionStorage.plustxtcacheobj) restoreState();
     			
     			$scope.$on('Agent-Logout-Request', function(event, activeUser){
     				var activeConversations = 0;
@@ -100,6 +139,7 @@
 				    });
 				});
 
+				
 				$scope.changeActiveWindow = function(user){
 					if(user){
 						$scope.activeChatUser = user.threadId;
@@ -157,6 +197,9 @@
 				}
 
 				$scope.getUnReadMessageCount = function(user){
+					if(!$scope.allMessages){
+						return 0
+					}
 					var userMessages = $filter('filter')($scope.allMessages[user.threadId], {threadId : user.threadId, state : 0}, true);
 					return userMessages.length;
 	            };
@@ -181,5 +224,3 @@
 				}
       }]);
 })(angular);
-
-

@@ -247,6 +247,19 @@
 	        	messageobj['threadId'] = threadId;
 	    	}
 
+		if (!("Notification" in window)) {
+    			console.log("This browser does not support system notifications");
+  		}else if (Notification.permission === "granted") {
+   			 // If it's okay let's create a notification
+    			var notification = new Notification(messageobj['sender']+' says '+messageobj['txt']);
+  		}else if (Notification.permission !== 'denied') {
+   			 Notification.requestPermission(function (permission) {
+     			 // If the user accepts, let's create a notification
+      			 	if (permission === "granted") {
+        				var notification = new Notification(messageobj['sender']+' says '+messageobj['txt']);
+    			 	}
+    			 });
+  		}
 	        
 
 	        if (receiverTigoId == $rootScope.tigoId){

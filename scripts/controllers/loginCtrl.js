@@ -1,7 +1,7 @@
 (function(angular){
 	"use strict";
-	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location', 'PanelAuthService', 'MessageService',
-		function($scope, $rootScope, $location, PanelAuthService, MessageService){
+	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location', 'PanelAuthService', 'MessageService', '$cookieStore',
+		function($scope, $rootScope, $location, PanelAuthService, MessageService, $cookieStore){
 
 		function validateLogin(){
 			var isValid = true;
@@ -14,6 +14,24 @@
 			return isValid;
 		};
 
+		$scope.checkLogin = function(){
+			console.log($cookieStore);
+			var agentSessionKey = $cookieStore.get('agentKey');
+			if(!agentSessionKey){
+				$rootScope.isLogin = $scope.isLogin = false;
+			}
+			else {
+				// TODO validate session later.
+				var user = {
+					token : agentSessionKey
+				}
+				$rootScope.user = user;
+				$rootScope.isLogin = $scope.isLogin = true;
+				$rootScope.$broadcast('chatConnet');
+			}
+		}
+		$scope.checkLogin();
+
 		$scope.loginToPanel = function(){
 			PanelAuthService.agentPanelLogin.query({
 				username : $scope.username,
@@ -25,6 +43,7 @@
 				 		password: $scope.password,
 				 		token: response.key
 				 	}
+					$cookieStore.put('agentKey',user.token);
 				 	$rootScope.user = user;
 				 	$rootScope.isLogin = $scope.isLogin = true;
 				 	$rootScope.$broadcast('chatConnet');
