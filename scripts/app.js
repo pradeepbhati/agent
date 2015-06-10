@@ -1,6 +1,6 @@
 (function (angular){
 "use strict;"
-	var app = angular.module('bargain', ['ngRoute', 'ngResource', 'LocalStorageModule', 'ui.bootstrap']);
+	var app = angular.module('bargain', ['ngRoute', 'ngResource', 'LocalStorageModule', 'ui.bootstrap', 'ngCookies']);
 	
 	// app.config(['$routeProvider',  '$locationProvider', function($routeProvider, $locationProvider){
 	// 	$routeProvider
@@ -47,4 +47,13 @@
 	app.config(['localStorageServiceProvider', function(localStorageServiceProvider){
 	  localStorageServiceProvider.setPrefix('bargain');
 	}]);
+
+	app.run(function($rootScope) {
+		window.addEventListener("beforeunload", function (e) {
+	      		$rootScope.$broadcast('savestate');
+			return null;
+		});
+	});
+
 })(angular);
+
