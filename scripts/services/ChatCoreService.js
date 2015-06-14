@@ -22,8 +22,10 @@
 
       var MessID='mid-'+messageId;
        if (body) {
-        var timeInMilliSeconds = messageId.substr(messageId.lastIndexOf('-') + 1, messageId.length);
-        var strTimeMii = timeInMilliSeconds.toString().substring(0, 10);
+        //var timeInMilliSeconds = messageId.substr(messageId.lastIndexOf('-') + 1, messageId.length);
+        //var strTimeMii = timeInMilliSeconds.toString().substring(0, 10);
+	var strTimeMii = response['timeMilli'];
+	strTimeMii = strTimeMii.substring(0, strTimeMii.length-3);
         UtilService.addMessage($rootScope.plustxtId, full_jid, body, strTimeMii, messageId, isSpecialMessage, threadId, via);
         //UtilService.updateMessageStatus(messageId, 2, Strophe.getNodeFromJid(jid), UtilService.getTimeInLongString());
       }  
@@ -234,6 +236,7 @@
                 // Sending delivery acknowledment back.
                 var message2 = $msg({to: response['full_jid'], "type": "chat", "id": mid}).c('delivered').t(messageID).up().c('thread').t(threadId).up().c('meta');
                 // $('#mid-'+messageID).html('Delivered&nbsp;');
+		response['timeMilli'] = strTimeMii
                 on_Message_Update_Chat(response);
                 $rootScope.chatSDK.connection.send(message2);
                 console.log('@on_message : Delivery Acknowledment Sent ' + message2);

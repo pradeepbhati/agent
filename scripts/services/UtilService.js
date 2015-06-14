@@ -1,7 +1,7 @@
 (function (angular){
 	"use strict;"
 
-	angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', function ($rootScope, IntimationService) {
+	angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', 'ConsumerDataService', function ($rootScope, IntimationService, ConsumerDataService) {
 		var ua = navigator.userAgent.toLowerCase();
 		var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 		if (ua.indexOf(" chrome/") >= 0 || ua.indexOf(" firefox/") >= 0 || ua.indexOf(' gecko/') >= 0) {
@@ -311,7 +311,16 @@
 	        else {
 	            $rootScope.usersCount = $rootScope.usersCount + 1;
 	        	var contactObj = {};
-	        	contactObj.name = "Guest " + $rootScope.usersCount;
+			ConsumerDataService.getConsumerProfile($rootScope.user.token, otherpartyid).query({
+				mobile:otherpartyid
+			}, function success(response){
+				console.log(response);
+				contactObj.name = response.profile_data.name;
+				contactObj.profile_url = response.profile_data.url;
+			}, function failure(error){
+				console.log(error);
+	        		contactObj.name = "Guest " + $rootScope.usersCount;
+			});
 	        	contactObj.id   = otherpartyid;
 	        	contactObj.lastActive = getTimeInLongString();
 	        	contactObj.chatState = "open";
