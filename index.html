@@ -38,6 +38,8 @@
     <script src="scripts/vendor/angular-cookies.js"></script>
     <script src="scripts/vendor/strophe.js"></script>
     <script src="scripts/vendor/moment.js"></script>
+    <script src="bower_components/ng-clip/src/ngClip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js"></script>
 
 
     <script src="scripts/app.js"></script>
@@ -71,11 +73,14 @@
     <div id="header" class="header">
         <div class="container">
             <div class="row">
-                <div class="col-md-1"> Logo</div>
-                <div class="col-md-9 fw-bold mt5 f18 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
+                <div class="col-md-2 logo mt5"> MagicTiger</div>
+                <div class="col-md-7  mt5 f16 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
                 <div class="col-md-2 logoutDiv"  align="center" ng-if="isLogin">
                     <div class="fa fa-lg fa-user user"></div>
                     <div  ng-click="logout()"  class="logout">Logout</div>
+                </div>
+                <div class="col-md-1"  ng-if="isLogin">
+                   <input type="submit" value="Reconnect" class="btn btn-primary btn-teal" ng-click="reconnectConnection()"></input>
                 </div>
             </div>
         </div>
@@ -141,13 +146,18 @@
             
             <li class="chatheader" ng-click="setFocus()">
                 <div class="row">
-                    <div class="col-md-10  h11 fw-bold" > {{contact.name}} ({{contact.id}})</div>
+                    <div class="col-md-2"><a class="fa fa-copy f20 copyicon" clip-copy="copyChat()" title="copy">  </a></div>
+                    <div class="col-md-9  h11 fw-bold headername" align="left"> {{contact.name}} ({{contact.id}})</div>
+
                     <div class="col-md-1  closeIcon" ng-click="closeUserChat()"></div>
                 </div>
             </li>
             <li>
               <div class="fixheader" align="center">
-              <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a></div>
+              <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
+              
+              </div>
+
             </li>
             
             <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>

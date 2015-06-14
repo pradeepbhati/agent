@@ -17,10 +17,10 @@
                $rootScope.$on("savestate", saveState);
 
                function restoreState() {
-		$scope.agentId = $rootScope.tigoId;
-		$rootScope.plustxtcacheobj = angular.fromJson(sessionStorage.plustxtcacheobj); 
+				$scope.agentId = $rootScope.tigoId;
+				$rootScope.plustxtcacheobj = angular.fromJson(sessionStorage.plustxtcacheobj); 
                 var chatObj = $rootScope.plustxtcacheobj; 
-		$scope.contact = chatObj.contact;
+				$scope.contact = chatObj.contact;
                 $scope.allMessages = chatObj.message;
                 $scope.products = chatObj.products;
                 if($scope.activeWindows.length < Globals.AppConfig.ConcurrentChats){
@@ -221,6 +221,8 @@
 							break;
 					}
 					return messageState;
-				}
+				};
+
+				
       }]);
 })(angular);

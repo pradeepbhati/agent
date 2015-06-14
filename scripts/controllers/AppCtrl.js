@@ -10,6 +10,7 @@
 					$rootScope.plustxtId = null;
 					$rootScope.sessionid = null;
 					$rootScope.tigoId = null;
+					$rootScope.isLogoutRequestPending = false;
 					$rootScope.resourceId = null;
 					if(!$rootScope.plustxtcacheobj) {
 						$rootScope.plustxtcacheobj = {};
@@ -24,15 +25,15 @@
 				};
 
                function saveState() {
-		  if($rootScope.isLogin) { 
-		  	sessionStorage.agentId = angular.toJson($rootScope.tigoId);
-		  }
+				  if($rootScope.isLogin) { 
+				  	sessionStorage.agentId = angular.toJson($rootScope.tigoId);
+				  }
                };
 
                $rootScope.$on("savestate", saveState);
 
                function restoreState() {
-		 $rootScope.tigoId = angular.fromJson(sessionStorage.tigoId);
+		 			$rootScope.tigoId = angular.fromJson(sessionStorage.tigoId);
                };
 
                if (sessionStorage.tigoId) restoreState();				
@@ -46,10 +47,9 @@
 					$timeout(function(){
 						$scope.chatConnectionStatus = statusMessage;
 						if($rootScope.chatSDK && $rootScope.chatSDK.connection){
-							$rootScope.chatSDK.connection.send($pres({"type": "unavailable"}));
 							StropheService.disconnect($rootScope.chatSDK.connection);
 							$rootScope.chatSDK.connection = null;
-							window.location= window.location.href;
+							//window.location= window.location.href;
 						}
                 	});
 				};
@@ -70,8 +70,12 @@
 						case Strophe.Status.DISCONNECTING:
 							break;
 						case Strophe.Status.DISCONNECTED:
-							// $scope.init();
-							// $scope.loginToChatServer();
+							if(!$rootScope.isLogoutRequestPending){
+								$scope.loginToChatServer();
+							}
+							else{
+								window.location= window.location.href;
+							}
 							break;
 						case Strophe.Status.AUTHENTICATING:
 							break;
@@ -80,11 +84,13 @@
 							$scope.loginToChatServer();
 							break;
 						case Strophe.Status.CONNFAIL:
-							var statusMessage = "It seems you are logged in from another place. Going to logout."
-							$scope.forceLogout(statusMessage);
+							$scope.chatConnectionStatus = "It seems you are logged in from another place. Going to logout.";
+							$cookieStore.remove('agentKey');
+							sessionStorage.clear();
+							window.location= window.location.href;
 							break;
 						case Strophe.Status.AUTHFAIL:
-							var statusMessage = "Invalid Credentials while logging to Chat Server. Going to logout."
+							$scope.chatConnectionStatuse = "Invalid Credentials while logging to Chat Server. Going to logout."
 							$scope.forceLogout(statusMessage);
 							break;
 						case Strophe.Status.ATTACHED:
@@ -133,20 +139,25 @@
 				});
 
 				$scope.logout = function(){
-					PanelAuthService.agentPanelLogout.query({
-						key : $rootScope.user.token
+					PanelAuthService.agentPingCallback($rootScope.user.token).query({
+						score : Globals.AppConfig.MaxAgentUsers
 					}, function success(response){
 						$scope.init();
 						$cookieStore.remove('agentKey');
 						sessionStorage.clear();
-						$rootScope.isLogin = $scope.isLogin = false;
-						$rootScope.user = null;
+						$rootScope.isLogoutRequestPending = true;
 						$scope.forceLogout("Logging Out.");
 						
 					}, function failure(error){
 						MessageService.displayError("Some error occured while logging out.");
 					})
-				}
+				};
+
+				$scope.reconnectConnection =function(){
+					if($rootScope.chatSDK.connection){
+						StropheService.disconnect($rootScope.chatSDK.connection);
+					}
+				};
 				
 			}
     	]);

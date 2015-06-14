@@ -60,7 +60,9 @@ ul li{
 .pt10{padding: 4px 5px 0px 5px;}
 .pt10n5{padding: 10px 5px 0px 5px;}
 .f14{font-size: 14px;}
+.f16{font-size: 16px;}
 .f10{font-size: 10px;}
+.f20{font-size: 20px;}
 .f11{font-size: 11px;}
 .bold{font-weight: 600;}
 .padl20{padding:0px 0px 0px 20px;}
@@ -171,7 +173,12 @@ ul li{
 	font-size: 14px;
 	font-weight: 600;
 	text-align: center;
-	padding-top: 11px;
+	padding: 6px 0px;
+}
+
+.copyicon{
+	color: #fff !important;
+	font-weight : 500 !important;
 }
 
 .border-rad{border-radius: 1px 1px 0 0 !important;}
@@ -644,15 +651,25 @@ font-size: 14px;}
 	color: #FC0505;
 }
 
+.chatheader .row{
+	margin-left: -3px;
+	margin-right: -3px;
+}
+
 .closeIcon{
 	font-size: 18px;
 	cursor: pointer;
-	margin-top: -2px;
+	margin-top: -17px;
 	background: url(../images/close.png);
 	width: 12px;
 	height: 12px;
 	background-repeat: no-repeat;
 	float: right;
+}
+
+.headername{
+	padding: 5px 0px;
+	text-align: left;
 }
 
 .leftConversation{
@@ -967,4 +984,16 @@ background-image: -webkit-gradient(
 	float: left;
 	margin-top: -10px;
 	margin-bottom: 10px;
+}
+
+.btn-teal , .btn:hover{
+	line-height: 1.19em;
+	background-color: #1D9C73;
+	border-color: #1D9C73;
+}
+
+.logo{
+	font-size: 20px;
+	color: #1D9C73;
+	font-weight: 800;
 }
