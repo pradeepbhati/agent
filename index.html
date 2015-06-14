@@ -52,6 +52,7 @@
     <script src="scripts/services/UtilService.js"></script>
     <script src="scripts/services/TemplateService.js"></script>
     <script src="scripts/services/IntimationService.js"></script>
+    <script src="scripts/services/ConsumerDataService.js"></script>
     <script src="scripts/services/MessageService.js"></script>
     <script src="scripts/directives/angular-enter/angular-enter.js"></script>
     <script src="scripts/directives/input-type-number/input-type-number.js"></script>
@@ -196,7 +197,8 @@
             </div>
         </li>
         <li ng-repeat="user in contact" ng-click="openchatview(user)" class="">
-            <div align="left" class="padl20 col-md-10 f14" ng-class="activeChatUser == user.id ? 'active' : '' " >{{ user.name }}
+            <div align="left" class="padl20 col-md-10 f14" ng-class="activeChatUser == user.id ? 'active' : '' " >
+		<a target="_blank" ng-href="{{user.profile_url}}">{{ user.name }}</a>
                 <br/>
                 <span class='italicFont' ng-if="user.chatState=='closed'">left the conversation</span>
             </div>
