@@ -74,7 +74,16 @@
 								$scope.loginToChatServer();
 							}
 							else{
-								window.location= window.location.href;
+								//window.location= window.location.href;
+								PanelAuthService.agentPanelLogout.query({
+									key : $rootScope.user.token
+								},function success(response){
+									$rootScope.isLogin = $scope.isLogin = false;
+									$rootScope.user = null;
+								},function failure(error){
+									$rootScope.isLogin = $scope.isLogin = false;
+									$rootScope.user = null;
+								});
 							}
 							break;
 						case Strophe.Status.AUTHENTICATING:

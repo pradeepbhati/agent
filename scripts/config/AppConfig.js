@@ -2,7 +2,7 @@ var Globals = {
   AppConfig : {}
 };
 (function() {
-  var chatHostBaseURI = "http://dev-agent.magictiger.com";//"https://chat-staging.paytm.com";
+  var chatHostBaseURI = "http://dev-agent.magictiger.com";
   Globals.AppConfig = {
   	ConcurrentChats : 3,
     MaxAgentUsers : 3,
