@@ -36,6 +36,21 @@
 		  }
 		});
 
+		var agentPingCallback = function(token){
+			return $resource(Globals.AppConfig.PingCallback, {}, {
+			  query: {
+			    method:'POST', 
+			    isArray: false, 
+			    params:{}, 
+			    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+			    	Authorization : token
+				},
+			    transformRequest: manageReqPacketTransform
+			  }
+			});
+		};
+		 
+
 		var chatServerCredentials = function(token){
 			return $resource(Globals.AppConfig.AgentChatCredentials, null, {
 	            query: {
@@ -50,7 +65,8 @@
 		PanelAuthService = {
       		agentPanelLogin: agentPanelLogin,
       		agentPanelLogout : agentPanelLogout,
-      		chatServerCredentials : chatServerCredentials
+      		chatServerCredentials : chatServerCredentials,
+      		agentPingCallback : agentPingCallback
       	}
 
 		return PanelAuthService;
