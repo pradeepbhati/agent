@@ -187,7 +187,7 @@
             
 
             <!-- Bottom Text Area -->
-            <li ng-click="setFocus()">
+            <li ng-click="focusTextArea()">
                 <div class="chatText col-md-12">
                         <textarea type="text" placeholder="Send a message" class="chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
                 </div>

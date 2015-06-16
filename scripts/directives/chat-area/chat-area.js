@@ -27,6 +27,19 @@
             scope.$emit('Active-User-Changed', scope.chatData.threadId);
           };
 
+	  scope.focusTextArea = function(){
+	  	var activeUser = scope.contact;
+                                ChatServerService.getConsumerInfo($rootScope.user.token,activeUser.id).query({
+                                        mobile: activeUser.id
+                                }, function success(response){
+                                        if(response[activeUser.id] && response[activeUser.id] != $rootScope.tigoId){
+                                                MessageService.confirm(activeUser.name + '(' + activeUser.id + ') is talking to ('+response[activeUser.id]+') Do you want to continue messaging with them?', 'Yes, continue chatting','No, I will close the chat');
+                                        }
+                                }, function failure(error){
+                                        console.log(error);
+                                });
+	  };
+
           scope.submitMessage = function(isPromoCode){
             if(scope.agentMessage.trim() != ""){
               var timeInMilliSecond = UtilService.getTimeInLongString();

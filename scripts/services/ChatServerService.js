@@ -36,6 +36,16 @@
 	        })
 		};
 
+		var getConsumerInfo = function(token,mobile){
+			return $resource(Globals.AppConfig.GetConsumerInfo, {mobile:mobile}, {
+				query: {
+					method: 'GET',
+					headers: {
+				    		'Authorization': token
+					}
+				}
+			})
+		};
 		// var fetchUserHistory = $resource(Globals.AppConfig.GetUserHistory, {}, {
 		//   query: {
 		//     method:'POST',
@@ -48,7 +58,8 @@
 
 		ChatServerService = {
       		login: chatServerLogin,
-      		fetchUserHistory: fetchUserHistory
+      		fetchUserHistory: fetchUserHistory,
+		getConsumerInfo: getConsumerInfo
       	}
 
 		return ChatServerService;
