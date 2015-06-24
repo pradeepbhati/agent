@@ -36,8 +36,8 @@
 	        })
 		};
 
-		var getConsumerInfo = function(token,mobile){
-			return $resource(Globals.AppConfig.GetConsumerInfo, {mobile:mobile}, {
+		var getConsumerMessagingInfo = function(token,mobile){
+			return $resource(Globals.AppConfig.GetConsumerMessagingInfo, {mobile:mobile}, {
 				query: {
 					method: 'GET',
 					headers: {
@@ -59,7 +59,7 @@
 		ChatServerService = {
       		login: chatServerLogin,
       		fetchUserHistory: fetchUserHistory,
-		getConsumerInfo: getConsumerInfo
+		getConsumerMessagingInfo: getConsumerMessagingInfo
       	}
 
 		return ChatServerService;

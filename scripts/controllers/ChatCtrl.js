@@ -1,9 +1,10 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-		.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'ChatServerService', 'MessageService', 'UtilService', '$filter', '$timeout',
-			function ($scope, $rootScope, ChatCoreService, ChatServerService, MessageService, UtilService, $filter, $timeout) {
+		.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
+			function ($scope, $rootScope, ChatCoreService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
 				$scope.activeWindows = [];
+			$scope.agentId = $rootScope.tigoId;
     			$scope.contact = $rootScope.plustxtcacheobj.contact;
     			$scope.products = $rootScope.plustxtcacheobj.products;
     			$scope.templates = $rootScope.templates;
@@ -112,7 +113,7 @@
 				$rootScope.$on('ChatObjectChanged', function(event, chatObj){
 					$scope.agentId = $rootScope.tigoId;
 					$scope.templates = $rootScope.templates;
-					$scope.$apply(function(){
+					//$scope.$apply(function(){
 				        $scope.contact = chatObj.contact;
 				        $scope.allMessages = chatObj.message;
 				        $scope.products = chatObj.products;
@@ -134,9 +135,29 @@
 						        	conversation.messages =  val;
 						        	$scope.activeWindows.push(conversation);
 					        	}
-					        })
-					    }
-				    });
+							
+
+					        });
+					}
+					// Update consumer info for all contacts in the roster.
+					angular.forEach($scope.contact, function(val, key){
+							if(key.length == 12){
+								var mobile = key.substring(2);
+							}else {
+								var mobile = key;
+							}
+							ConsumerDataService.getConsumerProfile($rootScope.user.token, mobile).query({
+                                				mobile:mobile
+                        				}, function success(response){
+                                				console.log(response);
+                                				$scope.contact[key].name = response.profile_data.name;
+                                				$scope.contact[key].profile_url = response.profile_data.url;
+                        				}, function failure(error){
+                                				console.log(error);
+                                				$scope.contact[key].name = "Guest " + $rootScope.usersCount;
+                        				})		
+					});
+				    //});
 				});
 
 				
@@ -173,6 +194,47 @@
 						}
 					}
 				};
+
+
+	    $scope.newConversation = function(){
+		mobile = $scope.newConversationNumber;
+		$scope.newConversationNumber = "";
+		var consumerId = "91"+mobile;
+		var contactObj = { 'chatState':'open',
+			       'id':mobile,
+			       'lastActive': new Date().getMilliseconds(),
+			       'threadId':consumerId
+		};
+		$rootScope.plustxtcacheobj.contact[consumerId] = contactObj;
+		$rootScope.plustxtcacheobj.message[consumerId] = new Array();
+		console.log($rootScope.plustxtcacheobj);
+	    
+		var chatObj = $rootScope.plustxtcacheobj; 
+		$scope.contact = chatObj.contact;
+                $scope.allMessages = chatObj.message;
+                $scope.products = chatObj.products;
+                if($scope.activeWindows.length < Globals.AppConfig.ConcurrentChats){
+                                                angular.forEach($scope.allMessages, function(val, key){
+                                                        var contactExists = false;
+                                                        angular.forEach($scope.activeWindows, function(value, index){
+                                                                if (value.threadId == key){
+                                                                        value.messages =  val;
+                                                                        contactExists = true;
+                                                                }
+                                                        });
+                                                        if(!contactExists){
+                                                                if($scope.activeWindows.length == 0){
+                                                                        $scope.activeChatUser = key;
+                                                                }
+                                                                var conversation = {};
+                                                                conversation.threadId = key;
+                                                                conversation.messages =  val;
+                                                                $scope.activeWindows.push(conversation);
+                                                        }
+                                                })
+                                            }
+		$rootScope.$broadcast('ChatObjectChanged',$rootScope.plustxtcacheobj);
+	    };
 
 				$scope.sendMessage = function(body, jid, timeInMilliSecond, mid, threadId){
 					if(body !== ""){

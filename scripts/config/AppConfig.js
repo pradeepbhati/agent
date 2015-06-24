@@ -9,7 +9,7 @@ var Globals = {
   	ChatHostURI : '52.11.221.95', //chatHostBaseURI.replace(/.*?:\/\//g, ""),
     ChatServerConnect :  chatHostBaseURI + "/accounts/connect/",
     StropheConnect : chatHostBaseURI  + "/http-bind/",
-    GetConsumerInfo: "http://dev-agent.magictiger.com/api/messaging/chatuser/:mobile/",
+    GetConsumerMessagingInfo: "http://dev-agent.magictiger.com/api/messaging/chatuser/:mobile/",
     CloseChatMessage : '{"CLSCHAT" : "chat closed"}',
     GetUserHistory : "http://dev-agent.magictiger.com/api/messaging/messages/get-messages/",
     GetConsumerData : "http://dev-agent.magictiger.com/api/accounts/consumer/:mobile/",

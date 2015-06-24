@@ -215,6 +215,11 @@
             <div class="circle col-md-2 ml7" ng-if="getUnReadMessageCount(user) && user.chatState !='closed'" ng-class="activeChatUser == user.id ? 'green' : '' " >{{getUnReadMessageCount(user)}}</div>
             <div class="circle col-md-3 ml7 red" ng-if="user.chatState =='closed'" ng-click="closeChatFromLeftNav(user)">X</div>
         </li>
+	<li ng-hide="true">
+    	<div align="center" class="chatText col-md-12">
+		<textarea type="text" placeholder="Start new conversation" class="chatTextArea" ng-enter="newConversation()" ng-model="newConversationNumber"> </textarea>
+    	</div>
+	</li>
     </ul>
 
 </script>

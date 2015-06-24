@@ -29,7 +29,7 @@
 
 	  scope.focusTextArea = function(){
 	  	var activeUser = scope.contact;
-                                ChatServerService.getConsumerInfo($rootScope.user.token,activeUser.id).query({
+                                ChatServerService.getConsumerMessagingInfo($rootScope.user.token,activeUser.id).query({
                                         mobile: activeUser.id
                                 }, function success(response){
                                         if(response[activeUser.id] && response[activeUser.id] != $rootScope.tigoId){
@@ -108,9 +108,9 @@
           var chatMessage = scope.messages;
           angular.forEach(chatMessage, function(msg, value){
             if(msg.receiver == $rootScope.tigoId){
-               formatMsg = formatMsg + msg.sender + ' '+ UtilService.getLocalTime(msg.last_ts) + ': ' + msg.txt + '\n\r';
+               formatMsg = formatMsg + msg.sender + ' '+ UtilService.getLocalTime(msg.last_ts/1000) + ': ' + msg.txt + '\n\r';
             }else{
-              formatMsg = formatMsg + $rootScope.tigoId + ' '+ UtilService.getLocalTime(msg.last_ts) +': ' + msg.txt + '\n\r';
+              formatMsg = formatMsg + $rootScope.tigoId + ' '+ UtilService.getLocalTime(msg.last_ts/1000) +': ' + msg.txt + '\n\r';
             }
           });
           MessageService.displaySuccess("All messages have been copied in clip board for  " + scope.contact.id + " (" + scope.contact.name + ")");
