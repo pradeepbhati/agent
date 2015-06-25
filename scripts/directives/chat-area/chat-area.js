@@ -107,11 +107,7 @@
           var formatMsg = "";
           var chatMessage = scope.messages;
           angular.forEach(chatMessage, function(msg, value){
-            if(msg.receiver == $rootScope.tigoId){
-               formatMsg = formatMsg + msg.sender + ' '+ UtilService.getLocalTime(msg.last_ts/1000) + ': ' + msg.txt + '\n\r';
-            }else{
-              formatMsg = formatMsg + $rootScope.tigoId + ' '+ UtilService.getLocalTime(msg.last_ts/1000) +': ' + msg.txt + '\n\r';
-            }
+              formatMsg = formatMsg + msg.sender + '->' + msg.receiver + ' '+ UtilService.getLocalTime(msg.last_ts/1000) +': ' + msg.txt + '\n\r';
           });
           MessageService.displaySuccess("All messages have been copied in clip board for  " + scope.contact.id + " (" + scope.contact.name + ")");
           return formatMsg;
