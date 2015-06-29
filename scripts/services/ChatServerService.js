@@ -25,15 +25,15 @@
 		  }
 		});
 
-		var fetchUserHistory = function(token,contact){
-			return $resource(Globals.AppConfig.GetUserHistory+contact +"/", null, {
-	            query: {
-	                method: 'GET',
-	                headers: {
-	                    'Authorization': token
-	                }
-	            }
-	        })
+	    var fetchUserHistory = function(token,contact, pageNo){
+		    return $resource(Globals.AppConfig.GetUserHistory+pageNo, {mobile:contact}, {
+			query: {
+	                    method: 'GET',
+	                    headers: {
+				'Authorization': token
+	                    }
+			}
+	            })
 		};
 
 		var getConsumerMessagingInfo = function(token,mobile){

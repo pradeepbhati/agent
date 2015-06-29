@@ -11,7 +11,7 @@ var Globals = {
     StropheConnect : chatHostBaseURI  + "/http-bind/",
     GetConsumerMessagingInfo: "http://dev-agent.magictiger.com/api/messaging/chatuser/:mobile/",
     CloseChatMessage : '{"CLSCHAT" : "chat closed"}',
-    GetUserHistory : "http://dev-agent.magictiger.com/api/messaging/messages/get-messages/",
+    GetUserHistory : "http://dev-agent.magictiger.com/api/messaging/messages/:mobile/",
     GetConsumerData : "http://dev-agent.magictiger.com/api/accounts/consumer/:mobile/",
     //GetUserHistory : "http://agent.magictiger.com/api/messaging/messages/",
     PanelLoginUrl: "http://dev-agent.magictiger.com/api/accounts/agent/login/",

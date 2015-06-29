@@ -92,14 +92,18 @@
         scope.loadHistory = function(threadId){
             scope.showLoader=true;
             var timeStamp = scope.chatData.messages[0].sent_on;
+	    var nextPage = scope.chatData.nextPage;
+	    if(!nextPage){
+		nextPage = '';
+	    }
             var contactId = scope.contact.id;
-            ChatServerService.fetchUserHistory($rootScope.user.token, contactId).query(
+            ChatServerService.fetchUserHistory($rootScope.user.token, contactId, nextPage).query(
             {
-              
+		
             },
              function success(response){
-              if(response &&  response.messages){
-                  var messageArray = UtilService.syncHistory(response.messages, '9591418090');
+              if(response &&  response.results){
+                  var messageArray = UtilService.syncHistory(response.results);
                   if(messageArray.length){
                     $timeout(function(){
                       angular.forEach(messageArray, function(value, index){
@@ -113,6 +117,7 @@
                       scope.showHistory = false;
                     })
                   }
+		  scope.chatData.nextPage = response.next;
               }
               scope.showLoader=false;       
             }, function failure(error){
