@@ -11,11 +11,28 @@
           scope.contact = scope.contact[scope.chatData.threadId];
           scope.messages = scope.chatData.messages;
 
+	  scope.isAppUser = function(threadId){
+	  	if(threadId.length == 12 && threadId.substring(0,2) == "91"){
+			// Assume whatsapp user with 12 digit thread id
+			return false;
+		}
+		else {
+			// Assume app user with 10 digit username and thread id
+			return true;
+		}
+	  }
+
           scope.closeUserChat = function(){
             if(scope.contact.chatState != "closed"){
               MessageService.confirm("Are you sure you want to close conversation with " + scope.contact.name + " ?")
               .then(function() {
-                $rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
+		if(scope.isAppUser(scope.chatData.threadId) == true){
+			var closeChatAppMessage = scope.getCloseChatAppMessage(scope.chatData.threadId);
+			scope.agentMessage = closeChatAppMessage;
+	                scope.submitMessage();	
+		}
+		scope.contact.chatState = "closed";
+                //$rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
               });
             }
             else{

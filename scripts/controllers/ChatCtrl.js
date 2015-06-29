@@ -236,6 +236,19 @@
 		$rootScope.$broadcast('ChatObjectChanged',$rootScope.plustxtcacheobj);
 	    };
 
+
+		$scope.getCloseChatAppMessage = function(threadId){
+			var closeChatAppMessageJson = {
+ 			  "_mt_cmmd":{
+      				"timestamp":(new Date).getTime(),
+      				"type":"AGENT_CHAT_CLOSE",
+      				"user":threadId,
+      				"agent":$rootScope.tigoId
+   			  }
+			};
+			return JSON.stringify(closeChatAppMessageJson);
+		}
+
 				$scope.sendMessage = function(body, jid, timeInMilliSecond, mid, threadId){
 					if(body !== ""){
 			            var message = $msg({to: jid, "type": "chat", "id": mid}).c('body').t(body).up().c('active', {xmlns: "http://jabber.org/protocol/chatstates"}).up()
