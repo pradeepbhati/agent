@@ -997,3 +997,14 @@ background-image: -webkit-gradient(
 	color: #1D9C73;
 	font-weight: 800;
 }
+
+.system-message {
+  display: inline-block;
+  margin-top: 5px;
+  border-bottom-width: 5px;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+  /* background-color: wheat; */
+  color: darkcyan;
+  /* text-decoration: underline; */
+}

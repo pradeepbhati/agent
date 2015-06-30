@@ -1,7 +1,7 @@
 (function (angular){
 	"use strict;"
 
-	angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', 'ConsumerDataService', function ($rootScope, IntimationService, ConsumerDataService) {
+    angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', 'ConsumerDataService','ChatDSLService', function ($rootScope, IntimationService, ConsumerDataService, ChatDSLService) {
 		var ua = navigator.userAgent.toLowerCase();
 		var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 		if (ua.indexOf(" chrome/") >= 0 || ua.indexOf(" firefox/") >= 0 || ua.indexOf(' gecko/') >= 0) {
@@ -124,7 +124,7 @@
     	var syncHistory = function(messageList){
         	var messageArray = []; var state = 0;
         	angular.forEach(messageList, function(value, index){
-        		var messageObj ={};
+        	    var messageObj ={};
         		messageObj['deleted_on_sender'] = value['deleted_on_sender'];
 	            messageObj['sender'] = value['sender'];
 	            messageObj['receiver'] = value['receiver'];
@@ -151,6 +151,9 @@
 	            else
 	                state = 0;
 	            messageObj['state'] = state;//0-sending;1-sent;2-Delivered;3-read
+
+		    // Handle ChatDSL
+		    var chatDSLMessage = ChatDSLService.getChatDSLMessage(messageObj);
 	            if(value['sender'] && value['receiver']){
             	//if(value['sender']){
 	                messageArray.push(messageObj);
@@ -247,6 +250,9 @@
 	        	messageobj['threadId'] = threadId;
 	    	}
 
+	        // Handle ChatDSL
+	        var chatDSLMessage = ChatDSLService.getChatDSLMessage(messageobj);	    
+
 		if (!("Notification" in window)) {
     			console.log("This browser does not support system notifications");
   		}else if (Notification.permission === "granted") {
@@ -286,8 +292,6 @@
 						productObj.userId = specialMessage.PRDCNTXT.user_id;
 						productObj.productUrl = specialMessage.PRDCNTXT.product_url;
 						$rootScope.plustxtcacheobj.products[threadId] = productObj;
-
-						
 			        }
 			        else if(specialMessage.CLSCHAT){
 			        	messageobj['isCloseChatMesg'] = true;

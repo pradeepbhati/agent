@@ -1,8 +1,8 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-		.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
-			function ($scope, $rootScope, ChatCoreService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
+	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
+				 function ($scope, $rootScope, ChatCoreService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
 				$scope.activeWindows = [];
 			$scope.agentId = $rootScope.tigoId;
     			$scope.contact = $rootScope.plustxtcacheobj.contact;

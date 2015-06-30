@@ -51,6 +51,7 @@
     <script src="scripts/services/ChatServerService.js"></script>
     <script src="scripts/services/ChatCoreService.js"></script>
     <script src="scripts/services/StropheService.js"></script>
+    <script src="scripts/services/ChatDSLService.js"></script>
     <script src="scripts/services/UtilService.js"></script>
     <script src="scripts/services/TemplateService.js"></script>
     <script src="scripts/services/IntimationService.js"></script>
@@ -163,18 +164,27 @@
             <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
                 <div style="margin-bottom:10px;">
                     
-                    <div ng-repeat='message in messages'>
-                        <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
-                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
+                  <div ng-repeat='message in messages'>
+		    <div class="system-message" ng-trim="true" ng-if="message.isSystemMessage">
+		      {{message.txt}} at {{parsedDate(message.sent_on)}}
+		    </div>
+                        <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg && !message.isSystemMessage">
+                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode && !message.isImage && !message.isLocation && !message.isSystemMessage">
                                 <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-laptop'"></i>
                                 {{message.txt}}
                             </div>
+			    <div class='chat-name' ng-if="message.isImage">
+			      <img ng-src="{{message.img.thumbnail}}" />
+			    </div>
+			    <div class='chat-name' ng-if="message.isLocation">
+			      <img ng-src="{{message.loc.thumbnail}}" />
+			    </div>
                             <div class='chat-name' ng-if="message.isPromoCode">
                                 {{getJsonParsedMesg(message.txt).PRMCODE.message}}
                             </div>
                             <span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
                         </div>
-                        <div align="center" class="clear " ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+                        <div align="center" class="clear " ng-if="!message.isSystemMessage" ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
                         <div class='leftConversation clear' ng-if="message.isCloseChatMesg">
                             User left the conversation
                         </div>
