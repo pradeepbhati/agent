@@ -174,7 +174,7 @@
                                 {{message.txt}}
                             </div>
 			    <div class='chat-name' ng-if="message.isImage">
-			      <img ng-src="{{message.img.thumbnail}}" />
+			      <a target="_blank" ng-href="{{ message.img.url }}" ><img ng-src="{{ message.img.thumbnail }}" /></a>
 			    </div>
 			    <div class='chat-name' ng-if="message.isLocation">
 			      <a target="_blank" ng-href="{{ message.loc.url }}" ><img ng-src="{{ message.loc.thumbnail }}" /></a>

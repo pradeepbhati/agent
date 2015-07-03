@@ -1,7 +1,7 @@
 (function (angular){
     "use strict;"
 
-    angular.module('bargain').factory('ChatDSLService', [ '$resource', function($resouce) {
+    angular.module('bargain').factory('ChatDSLService', [ '$rootScope', '$resource', 'ChatServerService', function($rootScope, $resouce, ChatServerService) {
 
 	var ChatDSLService;
 
@@ -46,6 +46,15 @@
 		    msgObj.isImage = true;
 		    msgObj.img = {};
 		    msgObj.img.thumbnail = chatSplMessage['thumbnailUrl'];
+		    msgObj.img.multimediaId = chatSplMessage['multimediaId'];
+		    ChatServerService.downloadMedia($rootScope.user.token,msgObj.img.multimediaId).query({
+			multimediaId : msgObj.img.multimediaId
+		    }, function success(response){
+			msgObj.img.url = response.media;
+			console.log(response);
+		    }, function failure(error){
+			console.log(error);
+		    });
 		    break;
 		case 'location':
 		    msgObj.isLocation = true;

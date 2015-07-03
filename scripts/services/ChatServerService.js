@@ -33,7 +33,7 @@
 				'Authorization': token
 	                    }
 			}
-	            })
+	            });
 		};
 
 		var getConsumerMessagingInfo = function(token,mobile){
@@ -44,8 +44,20 @@
 				    		'Authorization': token
 					}
 				}
-			})
+			});
 		};
+
+	    var downloadMedia = function(token, multimediaId){
+		return $resource(Globals.AppConfig.DownloadMedia, {multimediaId:multimediaId} ,{
+		    query: {
+			method: 'GET',
+			headers: {
+			    'Authorization': token
+			}
+		    }
+		});
+	    };
+	    
 		// var fetchUserHistory = $resource(Globals.AppConfig.GetUserHistory, {}, {
 		//   query: {
 		//     method:'POST',
@@ -57,10 +69,11 @@
 		// });
 
 		ChatServerService = {
-      		login: chatServerLogin,
-      		fetchUserHistory: fetchUserHistory,
-		getConsumerMessagingInfo: getConsumerMessagingInfo
-      	}
+      		    login: chatServerLogin,
+      		    fetchUserHistory: fetchUserHistory,
+		    downloadMedia: downloadMedia,
+		    getConsumerMessagingInfo: getConsumerMessagingInfo
+      		};
 
 		return ChatServerService;
 	}]);
