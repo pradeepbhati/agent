@@ -177,7 +177,7 @@
 			      <img ng-src="{{message.img.thumbnail}}" />
 			    </div>
 			    <div class='chat-name' ng-if="message.isLocation">
-			      <img ng-src="{{message.loc.thumbnail}}" />
+			      <a target="_blank" ng-href="{{ message.loc.url }}" ><img ng-src="{{ message.loc.thumbnail }}" /></a>
 			    </div>
                             <div class='chat-name' ng-if="message.isPromoCode">
                                 {{getJsonParsedMesg(message.txt).PRMCODE.message}}

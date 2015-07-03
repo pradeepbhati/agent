@@ -8,6 +8,8 @@
 	var MT_CMMD = '_mt_cmmd';
 	var MT_SPL_CLZZ = '00SPCLZZ';
 
+	var gMapsUrl = "http://maps.google.com/maps?z=12&t=m&q=loc:";
+
 	var getChatDSLMessage = function(msgObj){
 	    var msg = msgObj.txt;
 	    if(msg[0] == '{'){
@@ -51,6 +53,7 @@
 		    msgObj.loc.lt = chatSplMessage.lt;
 		    msgObj.loc.gt = chatSplMessage.gt;
 		    msgObj.loc.thumbnail = chatSplMessage['thumbnailUrl'];
+		    msgObj.loc.url = gMapsUrl + msgObj.loc.lt.toString() + '+' + msgObj.loc.gt.toString();
 		    break;
 		}
 	    }
