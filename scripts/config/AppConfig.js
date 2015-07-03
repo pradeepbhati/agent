@@ -13,6 +13,7 @@ var Globals = {
     CloseChatMessage : '{"CLSCHAT" : "chat closed"}',
     GetUserHistory : "http://dev-agent.magictiger.com/api/messaging/messages/:mobile/",
     GetConsumerData : "http://dev-agent.magictiger.com/api/accounts/consumer/:mobile/",
+    DownloadMedia: "http://dev-agent.magictiger.com/api/messaging/media/download/:multimediaId/",
     //GetUserHistory : "http://agent.magictiger.com/api/messaging/messages/",
     PanelLoginUrl: "http://dev-agent.magictiger.com/api/accounts/agent/login/",
     PanelLogoutUrl: "http://dev-agent.magictiger.com/api/accounts/agent/logout/",
