@@ -11,8 +11,9 @@
           scope.contact = scope.contact[scope.chatData.threadId];
           scope.messages = scope.chatData.messages;
 
-	  scope.isAppUser = function(threadId){
-	  	if(threadId.length == 12 && threadId.substring(0,2) == "91"){
+	    scope.isAppUser = function(){
+		var threadId = scope.chatData.threadId;
+	  	if(threadId && threadId.length == 12 && threadId.substring(0,2) == "91"){
 			// Assume whatsapp user with 12 digit thread id
 			return false;
 		}
@@ -20,13 +21,13 @@
 			// Assume app user with 10 digit username and thread id
 			return true;
 		}
-	  }
+	  };
 
           scope.closeUserChat = function(){
             if(scope.contact.chatState != "closed"){
               MessageService.confirm("Are you sure you want to close conversation with " + scope.contact.name + " ?")
               .then(function() {
-		if(scope.isAppUser(scope.chatData.threadId) == true){
+		if(scope.isAppUser() == true){
 			var closeChatAppMessage = scope.getCloseChatAppMessage(scope.chatData.threadId);
 			scope.agentMessage = closeChatAppMessage;
 	                scope.submitMessage();	

@@ -137,7 +137,7 @@
 						}, 
 						function failure(error){
 							MessageService.displayError("Chat Server user details could not be fetched.");
-						})	
+						});
 				};
 
 				$rootScope.$on('chatConnet', function(){
@@ -147,7 +147,21 @@
 					}
 				});
 
-				$scope.logout = function(){
+			    $scope.logout = function(){
+				if($rootScope.plustxtcacheobj){
+				    console.log($rootScope.plustxtcacheobj);
+				    var contactsOnPage = $rootScope.plustxtcacheobj.contact;
+				    var size = 0, key;
+				    for (key in contactsOnPage) {
+					if (contactsOnPage.hasOwnProperty(key)) size++;
+				    }
+				    if(size){
+					MessageService.displayBlockingError(size.toString()+' chat windows are open. Please close them before logging out.').then(function(){
+					    console.log('Agent tried to logout with active windows');
+					});
+					return;
+				    }
+				}
 					PanelAuthService.agentPingCallback($rootScope.user.token).query({
 						score : Globals.AppConfig.MaxAgentUsers
 					}, function success(response){
@@ -159,7 +173,7 @@
 						
 					}, function failure(error){
 						MessageService.displayError("Some error occured while logging out.");
-					})
+					});
 				};
 
 				$scope.reconnectConnection =function(){

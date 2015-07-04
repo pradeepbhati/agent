@@ -67,6 +67,27 @@
         return deferred.promise;
       },
 
+	displayBlockingError: function(message, okText){
+	    var deferred = $q.defer();
+            $http.get("partials/message-service/error.html", {cache: $templateCache})
+		.success(function (response) {
+		    okText = okText || "Ok";
+		    clearMessage();
+		    messageBody = $(response);
+		    messageBody.find(".message-text").text(message);
+		    messageBody.find(".primaryButton").text(okText).click(function() {
+			messageBody.remove();
+			deferred.reject();
+		    });
+		    $(window.document).keyup(function(e){
+			messageBody.remove();
+			deferred.reject();
+		    });
+		    $("body").append(messageBody);
+		});
+	    return deferred.promise;
+	},
+
       responseHandler: function(data){
         // Security handling of the JSON response
         if (data != null && data.length > 0) {
