@@ -165,7 +165,7 @@ ul li{
 	color: #00B8ff;
 }
 .chatheader{
-	height: 36px;
+	height: 50px;
 	background-color: #666;
 	border-radius: 3px 3px 0 0;
 	border-bottom: solid 1px #666;
@@ -467,7 +467,7 @@ ul li{
 	padding: 0 0 0 0;
 }
 .chatArea{
-	height: 462px;
+	height: 450px;
 	overflow-y:	auto; 
 	padding-top: 10px
 }
