@@ -8,9 +8,9 @@
         templateUrl: 'tpl-productColour', //'scripts/directives/chat-area/chat-area-template.html',
         scope: false,
         link: function(scope, element, attrs) {         
-          scope.contact = scope.contact[scope.chatData.threadId];
-          scope.messages = scope.chatData.messages;
-
+            scope.contact = scope.contact[scope.chatData.threadId];
+            scope.messages = scope.chatData.messages;
+	    
 	    scope.isAppUser = function(){
 		var threadId = scope.chatData.threadId;
 	  	if(threadId && threadId.length == 12 && threadId.substring(0,2) == "91"){
@@ -82,7 +82,7 @@
                 isProductDetails : false,
                 isPromoCode : isPromoCode,
                 threadId : scope.chatData.threadId
-              }
+              };
               scope.chatData.messages.push(message);
               var jId = scope.contact.id + "@" + Globals.AppConfig.ChatHostURI;
               scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
@@ -107,23 +107,32 @@
                   var messageArray = UtilService.syncHistory(response.results);
                   if(messageArray.length){
                     $timeout(function(){
-                      angular.forEach(messageArray, function(value, index){
-                        scope.chatData.messages.unshift(value);
-                      })
+			angular.forEach(messageArray, function(value, index){
+			    // Check if MID is already in messageArray
+			    var mExists = false;
+			    angular.forEach(scope.chatData.messages, function(existingMessage, eMindex){
+				if(existingMessage.mid == value.mid){
+				    mExists = true;
+				}
+			    });
+			    if(!mExists){
+				scope.chatData.messages.unshift(value);
+			    }
+                      });
                       scope.messages =  scope.chatData.messages;
-                    })
+                    });
                   }
                   else{
                     $timeout(function(){
                       scope.showHistory = false;
-                    })
+                    });
                   }
 		  scope.chatData.nextPage = response.next;
               }
               scope.showLoader=false;       
             }, function failure(error){
               scope.showLoader=false;  
-            })
+            });
         };
 
         scope.copyChat = function(){
@@ -136,9 +145,11 @@
           return formatMsg;
         };
 
-          
+            if(scope.isAppUser()){
+		scope.loadHistory(scope.chatData.threadId);
+	    }
 
-          }
         }
+      };
     }]);
 })(angular);

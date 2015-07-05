@@ -160,7 +160,7 @@
             </li>
             <li>
               <div class="fixheader" align="center">
-              <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
+              <a href="javascript:void(0)" ng-if="scope.chatData.nextPage != ''" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
               
               </div>
 
@@ -189,7 +189,8 @@
                             </div>
                             <span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
                         </div>
-                        <div align="center" class="clear " ng-if="!message.isSystemMessage" ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+                        <div align="center" class="clear " ng-if="!message.isSystemMessage" ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}} <b>{{message.sender}}</b></div>
+			
                         <div class='leftConversation clear' ng-if="message.isCloseChatMesg">
                             User left the conversation
                         </div>
