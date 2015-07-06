@@ -1,8 +1,8 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
-				 function ($scope, $rootScope, ChatCoreService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
+	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'PanelAuthService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
+				 function ($scope, $rootScope, ChatCoreService, PanelAuthService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
 				$scope.activeWindows = [];
 			$scope.agentId = $rootScope.tigoId;
     			$scope.contact = $rootScope.plustxtcacheobj.contact;
@@ -133,7 +133,15 @@
 						        	var conversation = {};
 						        	conversation.threadId = key;
 						        	conversation.messages =  val;
-						        	$scope.activeWindows.push(conversation);
+						            $scope.activeWindows.push(conversation);
+							    PanelAuthService.agentPingCallback($rootScope.user.token).query({
+								score : $scope.activeWindows.length
+							    }, function success(response){
+								console.log(response);								
+							    }, function failure(error){
+								console.log(error);
+							    });
+
 					        	}
 							
 

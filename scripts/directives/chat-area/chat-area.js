@@ -1,8 +1,8 @@
 (function (angular){
   'use strict';
   angular.module('bargain')
-    .directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'ChatServerService', 'httpService', '$timeout', 
-        function($rootScope, UtilService, MessageService, ChatServerService, httpService, $timeout) {
+	.directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'httpService', '$timeout', 
+				function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, httpService, $timeout) {
       return {
         restrict: 'EA',
         templateUrl: 'tpl-productColour', //'scripts/directives/chat-area/chat-area-template.html',
@@ -32,12 +32,19 @@
 			scope.agentMessage = closeChatAppMessage;
 	                scope.submitMessage();	
 		}
-		scope.contact.chatState = "closed";
+		  scope.contact.chatState = "closed";
                 //$rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
               });
             }
             else{
-              $rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
+		$rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
+		PanelAuthService.agentPingCallback($rootScope.user.token).query({
+		    score : scope.activeWindows.length - 1
+		}, function success(response){
+		    console.log(response);								
+		}, function failure(error){
+		    console.log(error);
+		});
             }
           };
 
