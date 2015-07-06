@@ -80,7 +80,7 @@
                     <div class="fa fa-lg fa-user user"></div>
                     <div  ng-click="logout()"  class="logout">Logout</div>
                 </div>
-                <div class="col-md-1"  ng-if="isLogin">
+                <div class="col-md-1" ng-hide="true"  ng-if="isLogin">
                    <input type="submit" value="Reconnect" class="btn btn-primary btn-teal" ng-click="reconnectConnection()"></input>
                 </div>
             </div>
