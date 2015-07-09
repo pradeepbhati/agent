@@ -38,6 +38,7 @@
     <script src="scripts/vendor/angular-cookies.js"></script>
     <script src="scripts/vendor/strophe.js"></script>
     <script src="scripts/vendor/moment.js"></script>
+    <script src="scripts/vendor/le.min.js"></script>
     <script src="bower_components/ng-clip/src/ngClip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js"></script>
 
@@ -56,6 +57,8 @@
     <script src="scripts/services/TemplateService.js"></script>
     <script src="scripts/services/IntimationService.js"></script>
     <script src="scripts/services/ConsumerDataService.js"></script>
+    <script src="scripts/services/WizRocketService.js"></script>
+    <script src="scripts/services/LogglyService.js"></script>
     <script src="scripts/services/MessageService.js"></script>
     <script src="scripts/directives/angular-enter/angular-enter.js"></script>
     <script src="scripts/directives/input-type-number/input-type-number.js"></script>
@@ -66,6 +69,31 @@
     <script src="scripts/directives/chat-contact-list/chat-contact-list.js"></script>
 
 
+    <!-- Setup Logging with Logentries and Loggly -->
+    <script type="text/javascript" src="http://cloudfront.loggly.com/js/loggly.tracker.min.js" async></script>
+    <script>
+      
+      LE.init('a6ae9008-dfb6-4db8-9ff6-d4ff5b626e69');
+      
+      var _LTracker = _LTracker || [];
+      _LTracker.push({'logglyKey': '14455f19-06e3-4147-9c1d-8e2eb0392ea5',
+      'sendConsoleErrors' : true });
+    </script>
+
+    <script type="text/javascript">
+      var wizrocket = {event:[], profile:[], account:[], enum:function(e){return '$E_' + e}};
+      wizrocket.account.push({"id": "RZZ-4K8-KK4Z"});
+      (function () {
+      var wzrk = document.createElement('script');
+      wzrk.type = 'text/javascript';
+      wzrk.async = true;
+      wzrk.src = ('https:' == document.location.protocol ? 'https://d2r1yp2w7bby2u.cloudfront.net' : 'http://static.wizrocket.com') + '/js/a.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wzrk, s);
+      })();
+    </script>
+	         
+    
 </head>
 
 <body ng-controller="AppCtrl">

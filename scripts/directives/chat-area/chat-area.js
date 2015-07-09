@@ -1,8 +1,8 @@
 (function (angular){
   'use strict';
   angular.module('bargain')
-	.directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'httpService', '$timeout', 
-				function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, httpService, $timeout) {
+	.directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'WizRocketService', 'LogglyService', 'httpService', '$timeout', 
+				function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, WizRocketService, LogglyService, httpService, $timeout) {
       return {
         restrict: 'EA',
         templateUrl: 'tpl-productColour', //'scripts/directives/chat-area/chat-area-template.html',
@@ -30,7 +30,7 @@
 		if(scope.isAppUser() == true){
 			var closeChatAppMessage = scope.getCloseChatAppMessage(scope.chatData.threadId);
 			scope.agentMessage = closeChatAppMessage;
-	                scope.submitMessage();	
+	                scope.submitMessage();
 		}
 		  scope.contact.chatState = "closed";
                 //$rootScope.$broadcast("Close-User-Chat", scope.chatData.threadId);
@@ -92,7 +92,24 @@
               };
               scope.chatData.messages.push(message);
               var jId = scope.contact.id + "@" + Globals.AppConfig.ChatHostURI;
-              scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
+		scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
+		WizRocketService.sendEvent('message-new',{
+		    "sender": message.sender,
+		    "receiver": message.receiver,
+		    "txt":message.txt,
+		    "via":scope.isAppUser() ? 'app': 'whatsapp',
+		    "sent_on":message.sent_on
+		});
+
+		LogglyService.sendLog({
+		    '_eventType':'message-new',
+		    "sender": message.sender,
+		    "receiver": message.receiver,
+		    "txt":message.txt,
+		    "via":scope.isAppUser() ? 'app': 'whatsapp',
+		    "sent_on":message.sent_on
+		});
+
               scope.agentMessage = "";
             }
           };

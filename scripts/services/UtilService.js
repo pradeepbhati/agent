@@ -1,7 +1,7 @@
 (function (angular){
 	"use strict;"
 
-    angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', 'ConsumerDataService','ChatDSLService', function ($rootScope, IntimationService, ConsumerDataService, ChatDSLService) {
+    angular.module('bargain').factory('UtilService', ['$rootScope', 'IntimationService', 'ConsumerDataService','ChatDSLService', 'WizRocketService', 'LogglyService', function ($rootScope, IntimationService, ConsumerDataService, ChatDSLService, WizRocketService, LogglyService) {
 		var ua = navigator.userAgent.toLowerCase();
 		var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 		if (ua.indexOf(" chrome/") >= 0 || ua.indexOf(" firefox/") >= 0 || ua.indexOf(' gecko/') >= 0) {
@@ -253,6 +253,23 @@
 	        // Handle ChatDSL
 	        var chatDSLMessage = ChatDSLService.getChatDSLMessage(messageobj);	    
 
+	    WizRocketService.sendEvent('message-new',{
+		"sender": messageobj['sender'],
+		"receiver": messageobj['receiver'],
+		"txt":messageobj['txt'],
+		"via":messageobj['via'],
+		"sent_on":messageobj['sent_on']
+	    });
+
+	    LogglyService.sendLog({
+		"_eventType":"message-new",
+		"sender": messageobj.sender,
+		"receiver": messageobj.receiver,
+		"txt":messageobj.txt,
+		"via":messageobj.via,
+		"sent_on":messageobj.sent_on
+	    });
+	    
 		if (!("Notification" in window)) {
     			console.log("This browser does not support system notifications");
   		}else if (Notification.permission === "granted") {
