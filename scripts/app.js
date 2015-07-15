@@ -1,6 +1,6 @@
 (function (angular){
-"use strict;"
-	var app = angular.module('bargain', ['ngRoute', 'ngResource', 'LocalStorageModule', 'ui.bootstrap', 'ngCookies', 'ngClipboard']);
+    "use strict;"
+    var app = angular.module('bargain', ['ngRoute', 'ngResource', 'LocalStorageModule', 'ui.bootstrap', 'ngCookies', 'ngClipboard', 'ngFileUpload']);
 	
 	// app.config(['$routeProvider',  '$locationProvider', function($routeProvider, $locationProvider){
 	// 	$routeProvider

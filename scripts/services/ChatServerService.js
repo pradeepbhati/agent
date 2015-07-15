@@ -1,7 +1,7 @@
 (function (angular){
 	"use strict;"
 
-	angular.module('bargain').factory('ChatServerService', ['$resource', function ($resource) {
+    angular.module('bargain').factory('ChatServerService', ['$resource', 'Upload', function ($resource, Upload) {
 
 		var ChatServerService;
 		var manageReqPacketTransform = function(Obj) {
@@ -47,6 +47,18 @@
 			});
 		};
 
+	var uploadMedia = function(token, mid, file){
+	    return Upload.upload({
+		url: Globals.AppConfig.UploadMedia,
+		file: file,
+		fields: {'mid':mid},
+		headers: {'Authorization':token},
+		fileFormDataName: 'multimedia',
+		sendFieldsAs: "form"
+		
+	    });
+	};
+	    
 	    var downloadMedia = function(token, multimediaId){
 		return $resource(Globals.AppConfig.DownloadMedia, {multimediaId:multimediaId} ,{
 		    query: {
@@ -71,6 +83,7 @@
 		ChatServerService = {
       		    login: chatServerLogin,
       		    fetchUserHistory: fetchUserHistory,
+		    uploadMedia: uploadMedia,
 		    downloadMedia: downloadMedia,
 		    getConsumerMessagingInfo: getConsumerMessagingInfo
       		};

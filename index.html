@@ -39,6 +39,9 @@
     <script src="scripts/vendor/strophe.js"></script>
     <script src="scripts/vendor/moment.js"></script>
     <script src="scripts/vendor/le.min.js"></script>
+    <script src="scripts/vendor/ng-file-upload-all.js"></script>
+    <script src="scripts/vendor/ng-file-upload-shim.js"></script>
+    <script src="scripts/vendor/ng-file-upload.js"></script>
     <script src="bower_components/ng-clip/src/ngClip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js"></script>
 
@@ -232,9 +235,11 @@
 
             <!-- Bottom Text Area -->
             <li ng-click="focusTextArea()">
-                <div class="chatText col-md-12">
-                        <textarea type="text" placeholder="Send a message" class="chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
+              <div class="chatText col-md-12">
+		<div ng-if="isAppUser()" class="col-md-1 fa fa-paperclip" style="bottom-margin:15px;" ngf-select ngf-accept="'image/*'" ngf-change="upload($files)"></div>
+                <textarea type="text" placeholder="Send a message" class="col-md-11 chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
                 </div>
+
             </li>
         </ul>
     </div>

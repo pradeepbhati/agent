@@ -1,8 +1,8 @@
 (function (angular){
   'use strict';
   angular.module('bargain')
-	.directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'WizRocketService', 'LogglyService', 'httpService', '$timeout', 
-				function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, WizRocketService, LogglyService, httpService, $timeout) {
+	.directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'WizRocketService', 'LogglyService', 'httpService', '$timeout', 'ChatDSLService',
+				function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, WizRocketService, LogglyService, httpService, $timeout, ChatDSLService) {
       return {
         restrict: 'EA',
         templateUrl: 'tpl-productColour', //'scripts/directives/chat-area/chat-area-template.html',
@@ -23,6 +23,11 @@
 		}
 	  };
 
+	    scope.$watch('files', function () {
+		scope.upload(scope.files);
+	    });
+	    
+	    
           scope.closeUserChat = function(){
             if(scope.contact.chatState != "closed"){
               MessageService.confirm("Are you sure you want to close conversation with " + scope.contact.name + " ?")
@@ -48,7 +53,81 @@
             }
           };
 
-          scope.setFocus = function(){
+	    scope.upload = function (files) {
+		   if (files && files.length==1) {
+		       var file = files[0];
+		       var timeInMilliSecond = UtilService.getTimeInLongString();
+		       var strTimeMii = timeInMilliSecond.toString();
+		       var messageId = scope.agentId + "-c-" + strTimeMii;
+		       var mid = messageId.toString();
+		       var id = scope.chatData.threadId + '@' + Globals.AppConfig.ChatHostURI + "/" + 'whatsapp';
+
+		       var message = {
+			   can_forward: "true",
+			   delete_after: "-1",
+			   deleted_on_sender: "false",
+			   flags: 0,
+			   id: id,
+			   last_ts: strTimeMii.substring(0, 10),
+			   mid: mid,
+			   receiver: scope.contact.id ,
+			   sender: scope.agentId,
+			   sent_on: strTimeMii.substring(0, 10),
+			   state: 0,
+			   txt: '',
+			   isProductDetails : false,
+			   isPromoCode : false,
+			   threadId : scope.chatData.threadId
+		       };
+
+		       MessageService.displaySuccess('Starting file upload.');
+		       ChatServerService.uploadMedia($rootScope.user.token, messageId, file)
+			   .progress(function (evt) {
+			       var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+			       console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+			   }).success(function (data, status, headers, config) {
+			       console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+			       if(data.message == 'Successful upload'){
+				   MessageService.displaySuccess('File uploaded successfully.');
+				   console.log(data);
+				   var imageDSL = ChatDSLService.createImageDSL(data.data.mimetype,data.data.multimedia_id,data.data.thumburl);
+				   message['txt'] = imageDSL;
+				   message['txt'] = ChatDSLService.getChatDSLMessage(message);
+				   scope.chatData.messages.push(message);
+				   message['txt'] = imageDSL;
+				   var jId = scope.contact.id + "@" + Globals.AppConfig.ChatHostURI;
+				   scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
+				   WizRocketService.sendEvent('message-new',{
+				       "sender": message.sender,
+				       "receiver": message.receiver,
+				       "txt":message.txt,
+				       "via":scope.isAppUser() ? 'app': 'whatsapp',
+				       "sent_on":message.sent_on
+				   });
+				   
+				   LogglyService.sendLog({
+				       '_eventType':'message-new',
+				       "sender": message.sender,
+				       "receiver": message.receiver,
+				       "txt":message.txt,
+				       "via":scope.isAppUser() ? 'app': 'whatsapp',
+				       "sent_on":message.sent_on
+				   });
+				   
+				   scope.agentMessage = "";
+			       } else {
+				   MessageService.displayError(data.status + ' '+ data.message);
+			       }
+			   }).error(function (data, status, headers, config) {
+			       console.log('error status: ' + status);
+			   });
+		   }else {
+		       console.log('No valid file selected for upload');
+		   };
+	       };
+
+
+	  scope.setFocus = function(){
             scope.$emit('Active-User-Changed', scope.chatData.threadId);
           };
 

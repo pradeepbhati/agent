@@ -1,8 +1,8 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'PanelAuthService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout',
-				 function ($scope, $rootScope, ChatCoreService, PanelAuthService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout) {
+	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'PanelAuthService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout','Upload',
+				 function ($scope, $rootScope, ChatCoreService, PanelAuthService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout, Upload) {
 				$scope.activeWindows = [];
 			$scope.agentId = $rootScope.tigoId;
     			$scope.contact = $rootScope.plustxtcacheobj.contact;
@@ -15,6 +15,7 @@
 		  }
                };
 
+	       
                $rootScope.$on("savestate", saveState);
 
                function restoreState() {

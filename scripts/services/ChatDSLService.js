@@ -34,6 +34,15 @@
 	    }
 	};
 
+	var createImageDSL = function(mimetype, name, thumburl){
+	    var imageDSLJson = {};
+	    imageDSLJson[MT_SPL_CLZZ] = {'type':'image'};
+	    imageDSLJson[MT_SPL_CLZZ]['mimeType'] = mimetype;
+	    imageDSLJson[MT_SPL_CLZZ]['multimediaId'] = name;
+	    imageDSLJson[MT_SPL_CLZZ]['thumbnailUrl'] = thumburl;
+	    return JSON.stringify(imageDSLJson).replace(/\//g, '\\/');
+	};
+
 	var handleChatSpecialMessage = function(msgObj) {
 	    var msgJson = msgObj.mtSplClzz;
 	    if(!msgJson){
@@ -91,7 +100,8 @@
 
 	ChatDSLService = {
 	    getChatDSLMessage: getChatDSLMessage,
-	    handleChatDSLMessage: handleChatDSLMessage
+	    handleChatDSLMessage: handleChatDSLMessage,
+	    createImageDSL: createImageDSL
 	};
 
 	return ChatDSLService;
