@@ -257,6 +257,7 @@
 		"sender": messageobj['sender'],
 		"receiver": messageobj['receiver'],
 		"txt":messageobj['txt'],
+		"mid":messageobj['mid'],
 		"via":messageobj['via'],
 		"sent_on":messageobj['sent_on']
 	    });
@@ -266,6 +267,7 @@
 		"sender": messageobj.sender,
 		"receiver": messageobj.receiver,
 		"txt":messageobj.txt,
+		"mid":messageobj['mid'],
 		"via":messageobj.via,
 		"sent_on":messageobj.sent_on
 	    });

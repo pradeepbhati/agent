@@ -101,6 +101,7 @@
 				       "sender": message.sender,
 				       "receiver": message.receiver,
 				       "txt":message.txt,
+				       "mid":mid,
 				       "via":scope.isAppUser() ? 'app': 'whatsapp',
 				       "sent_on":message.sent_on
 				   });
@@ -110,6 +111,7 @@
 				       "sender": message.sender,
 				       "receiver": message.receiver,
 				       "txt":message.txt,
+				       "mid":mid,
 				       "via":scope.isAppUser() ? 'app': 'whatsapp',
 				       "sent_on":message.sent_on
 				   });
@@ -119,7 +121,7 @@
 				   MessageService.displayError(data.status + ' '+ data.message);
 			       }
 			   }).error(function (data, status, headers, config) {
-			       console.log('error status: ' + status);
+			       MessageService.displayError('Error uploading file: ' + status);
 			   });
 		   }else {
 		       console.log('No valid file selected for upload');
@@ -133,6 +135,7 @@
 
 	  scope.focusTextArea = function(){
 	  	var activeUser = scope.contact;
+			if(!scope.isAppUser()){
                                 ChatServerService.getConsumerMessagingInfo($rootScope.user.token,activeUser.id).query({
                                         mobile: activeUser.id
                                 }, function success(response){
@@ -142,6 +145,7 @@
                                 }, function failure(error){
                                         console.log(error);
                                 });
+			}
 	  };
 
           scope.submitMessage = function(isPromoCode){
@@ -164,7 +168,7 @@
                 sender: scope.agentId,
                 sent_on: strTimeMii.substring(0, 10),
                 state: 0,
-                txt: scope.agentMessage.replace(/\r?\n/g, " "),
+                txt: scope.agentMessage,
                 isProductDetails : false,
                 isPromoCode : isPromoCode,
                 threadId : scope.chatData.threadId
@@ -176,6 +180,7 @@
 		    "sender": message.sender,
 		    "receiver": message.receiver,
 		    "txt":message.txt,
+		    "mid":mid,
 		    "via":scope.isAppUser() ? 'app': 'whatsapp',
 		    "sent_on":message.sent_on
 		});
@@ -185,6 +190,7 @@
 		    "sender": message.sender,
 		    "receiver": message.receiver,
 		    "txt":message.txt,
+		    "mid":mid,
 		    "via":scope.isAppUser() ? 'app': 'whatsapp',
 		    "sent_on":message.sent_on
 		});

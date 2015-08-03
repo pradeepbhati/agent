@@ -1,13 +1,30 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'PanelAuthService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout','Upload',
-				 function ($scope, $rootScope, ChatCoreService, PanelAuthService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout, Upload) {
+	.controller('ChatCtrl', ['$scope', '$rootScope', 'ChatCoreService', 'PanelAuthService', 'ChatServerService', 'MessageService', 'UtilService', 'ConsumerDataService', '$filter', '$timeout', '$interval','Upload',
+				 function ($scope, $rootScope, ChatCoreService, PanelAuthService, ChatServerService, MessageService, UtilService, ConsumerDataService, $filter, $timeout, $interval, Upload) {
 				$scope.activeWindows = [];
 			$scope.agentId = $rootScope.tigoId;
     			$scope.contact = $rootScope.plustxtcacheobj.contact;
     			$scope.products = $rootScope.plustxtcacheobj.products;
     			$scope.templates = $rootScope.templates;
+
+	       var stopAgentPingBack;
+
+	       $scope.startAgentPingBack = function() {
+			if ( angular.isDefined(stopAgentPingBack) ) return;
+			stopAgentPingBack = $interval(function() {
+				PanelAuthService.agentPingCallback($rootScope.user.token).query({
+                                                                score : $scope.activeWindows.length
+                                                            }, function success(response){
+                                                                console.log(response);
+                                                            }, function failure(error){
+                                                                console.log(error);
+                                                            });
+			},5000); 
+		}
+
+		$scope.startAgentPingBack();
 
                function saveState() {
 		  if($rootScope.isLogin) {
