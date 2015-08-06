@@ -236,9 +236,10 @@
             <!-- Bottom Text Area -->
             <li ng-click="focusTextArea()">
               <div class="chatText col-md-12">
-		<div ng-if="isAppUser()" class="col-md-1 fa fa-paperclip" style="bottom-margin:15px;" ngf-select ngf-accept="'image/*'" ngf-change="upload($files)"></div>
-                <textarea type="text" placeholder="Send a message" class="col-md-11 chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
-                </div>
+                  <div ng-if="isAppUser()" class="fa fa-paperclip attach-file" ngf-select ngf-accept="'image/*'" ngf-change="upload($files)"></div>
+                  <div ng-if="isAppUser()" class="fa fa-cutlery food-menu" ng-click="sendFoodForm()"></div>
+                  <textarea type="text" placeholder="Send a message" class="col-md-12 chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
+              </div>
 
             </li>
         </ul>
