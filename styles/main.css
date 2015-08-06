@@ -1008,3 +1008,15 @@ background-image: -webkit-gradient(
   color: darkcyan;
   /* text-decoration: underline; */
 }
+
+.food-menu {
+	position: absolute;
+  bottom: 0;
+  right: 25px;
+}
+
+.attach-file {
+	position: absolute;
+  bottom: 0;
+  right: 5px;
+}
