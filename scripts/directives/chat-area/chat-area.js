@@ -88,7 +88,7 @@
                   threadId: scope.chatData.threadId
                 };
 
-                var chatDSL = ChatDSLService.createPaymentLinkDSL(scope.payment.amount, scope.payment.amount, scope.isAppUser());
+                var chatDSL = ChatDSLService.createPaymentLinkDSL(scope.payment.amount, scope.payment.url, scope.isAppUser());
                 message['txt'] = chatDSL;
                 message['txt'] = ChatDSLService.getChatDSLMessage(message);
                 scope.chatData.messages.push(message);
