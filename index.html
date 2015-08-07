@@ -238,6 +238,7 @@
               <div class="chatText col-md-12">
                   <div ng-if="isAppUser()" class="fa fa-paperclip attach-file" ngf-select ngf-accept="'image/*'" ngf-change="upload($files)"></div>
                   <div ng-if="isAppUser()" class="fa fa-cutlery food-menu" ng-click="sendFoodForm()"></div>
+                  <div class="fa fa-cc-visa payment-button" ng-click="sendPaymentLink()"></div>
                   <textarea type="text" placeholder="Send a message" class="col-md-12 chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
               </div>
 
@@ -289,6 +290,30 @@
 </div>
 </script>
 
+<script type="text/ng-template" id="paymentInfo.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Create Payment Link</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="paymentAmount" class="col-sm-2 control-label">Payment Amount</label>
+            <div class="col-sm-10">
+              <input type="number" required class="form-control" id="paymentAmount" placeholder="Payment Amount" ng-model="payment.amount">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="paymentUrl" class="col-sm-2 control-label">Payment URL</label>
+            <div class="col-sm-10">
+                <input type="url" class="form-control" id="paymentUrl" placeholder="Payment URL" ng-model="payment.url">
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-success" ng-click="ok()">OK</button>
+    </div>
+</script>
     
    <!--  <div ng-view ="" class="container" align="center"></div> -->
 </body>

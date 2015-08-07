@@ -1,8 +1,8 @@
 (function(angular) {
   'use strict';
   angular.module('bargain')
-    .directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'WizRocketService', 'LogglyService', 'httpService', '$timeout', 'ChatDSLService',
-      function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, WizRocketService, LogglyService, httpService, $timeout, ChatDSLService) {
+    .directive('chatArea', ['$rootScope', 'UtilService', 'MessageService', 'PanelAuthService', 'ChatServerService', 'WizRocketService', 'LogglyService', 'httpService', '$timeout', 'ChatDSLService', '$modal',
+      function($rootScope, UtilService, MessageService, PanelAuthService, ChatServerService, WizRocketService, LogglyService, httpService, $timeout, ChatDSLService, $modal) {
         return {
           restrict: 'EA',
           templateUrl: 'tpl-productColour', //'scripts/directives/chat-area/chat-area-template.html',
@@ -48,6 +48,65 @@
                   console.log(error);
                 });
               }
+            };
+
+            scope.sendPaymentLink = function(){
+              var modalInstance = $modal.open({
+                animation: false,
+                templateUrl: 'paymentInfo.html',
+                controller: 'ModalInstanceCtrl',
+                size: 'md',
+                resolve: {
+                }
+              });
+
+              modalInstance.result.then(function (payment) {
+                scope.payment = payment;
+
+                var timeInMilliSecond = UtilService.getTimeInLongString();
+                var strTimeMii = timeInMilliSecond.toString();
+                var messageId = scope.agentId + "-c-" + strTimeMii;
+                var mid = messageId.toString();
+                var receiver = scope.contact.id;
+                var id = scope.chatData.threadId + '@' + Globals.AppConfig.ChatHostURI + "/" + 'whatsapp';
+
+                var message = {
+                  can_forward: "true",
+                  delete_after: "-1",
+                  deleted_on_sender: "false",
+                  flags: 0,
+                  id: id,
+                  last_ts: strTimeMii.substring(0, 10),
+                  mid: mid,
+                  receiver: scope.contact.id,
+                  sender: scope.agentId,
+                  sent_on: strTimeMii.substring(0, 10),
+                  state: 0,
+                  txt: '',
+                  isProductDetails: false,
+                  isPromoCode: false,
+                  threadId: scope.chatData.threadId
+                };
+
+                var chatDSL = ChatDSLService.createPaymentLinkDSL(scope.payment.amount, scope.payment.amount, scope.isAppUser());
+                message['txt'] = chatDSL;
+                message['txt'] = ChatDSLService.getChatDSLMessage(message);
+                scope.chatData.messages.push(message);
+                message['txt'] = chatDSL;
+                var jId = scope.contact.id + "@" + Globals.AppConfig.ChatHostURI;
+                scope.sendMessage(message, jId, timeInMilliSecond, mid, scope.chatData.threadId);
+
+                LogglyService.sendLog({
+                   '_eventType':'message-new',
+                   "sender": message.sender,
+                   "receiver": message.receiver,
+                   "txt":message.txt,
+                   "mid":mid,
+                   "via":scope.isAppUser() ? 'app': 'whatsapp',
+                   "sent_on":message.sent_on
+                });   
+                scope.agentMessage = "";
+              });
             };
 
             scope.sendFoodForm = function() {

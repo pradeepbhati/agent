@@ -50,6 +50,26 @@
 			return JSON.stringify(json).replace(/\//g, '\\/');
 		};
 
+		var createPaymentLinkDSL = function(amount, url, isApp) {
+			var date = new Date();
+			date = date.getTime();
+
+			var json = {
+				"00SPCLZZ":{
+				  	"timestamp": date,
+				  	"type":"INSTAMOJO_PAYMENT_LINK",
+				  	"url":url,
+				  	"amount":amount
+				}
+			}
+			if(isApp){
+				return JSON.stringify(json).replace(/\//g, '\\/');				
+			}
+			else {
+				return "Please pay Rs. " + amount + " using following payment link - " + url;
+			}
+		};
+
 		var createImageDSL = function(mimetype, name, thumburl) {
 			var imageDSLJson = {};
 			imageDSLJson[MT_SPL_CLZZ] = {
@@ -120,7 +140,8 @@
 			getChatDSLMessage: getChatDSLMessage,
 			handleChatDSLMessage: handleChatDSLMessage,
 			createImageDSL: createImageDSL,
-			createFoodDSL: createFoodDSL
+			createFoodDSL: createFoodDSL,
+			createPaymentLinkDSL: createPaymentLinkDSL
 		};
 
 		return ChatDSLService;
