@@ -91,10 +91,14 @@
 						msgObj.loc.thumbnail = chatSplMessage['thumbnailUrl'];
 						msgObj.loc.url = gMapsUrl + msgObj.loc.lt.toString() + '+' + msgObj.loc.gt.toString();
 						break;
+				        case 'FOOD_MENU_LINK':
+				                msgObj.isFoodForm = true;
+				                msgObj.formUrl = chatSplMessage.url;
+				                break;
 				}
 			}
 			return null;
-		}
+		};
 
 		var handleChatDSLMessage = function(msgObj) {
 			var msgJson = msgObj.mtJson;
