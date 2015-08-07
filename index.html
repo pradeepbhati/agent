@@ -205,10 +205,13 @@
 		      {{message.txt}} at {{parsedDate(message.sent_on)}}
 		    </div>
                         <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg && !message.isSystemMessage">
-                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode && !message.isImage && !message.isLocation && !message.isSystemMessage">
+                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode && !message.isImage && !message.isLocation && !message.isSystemMessage && !message.isFoodForm">
                                 <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-laptop'"></i>
                                 {{message.txt}}
                             </div>
+			    <div class='chat-name' ng-if="message.isFoodForm">
+			      <a target="_blank" ng-href="{{ message.formUrl }}" >{{ message.formUrl }}</a>
+			    </div>
 			    <div class='chat-name' ng-if="message.isImage">
 			      <a target="_blank" ng-href="{{ message.img.url }}" ><img ng-src="{{ message.img.thumbnail }}" /></a>
 			    </div>
