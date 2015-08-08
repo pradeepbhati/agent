@@ -41,7 +41,8 @@
 				"00SPCLZZ": {
 					"timestamp": date,
 					"type": "FOOD_MENU_LINK",
-					"url": Globals.AppConfig.FoodFormUrl + form_id,
+				    "url": Globals.AppConfig.FoodFormUrl + form_id,
+				    "finishUrl": Globals.AppConfig.FoodFormFinishUrl,
 					"urlTitle": "Today's lunch menu",
 					"text": "Here is the food menu",
 					"buttonText": "VIEW FOOD MENU"
