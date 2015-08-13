@@ -22,7 +22,7 @@ var Globals = {
     PingCallback : "http://local-agent.magictiger.com/api/messaging/chatuser/pingback/",
     GenerateFoodForm: 'http://local-agent.magictiger.com/api/messaging/smartforms/smartform/',
       FoodFormUrl: 'http://dev-vendor.magictiger.com/food-menu/?form_id=',
-      FoodFormFinishUrl: 'http://dev-vendor.magictiger.com/food-menu/finish/'  
+      FoodFormFinishUrl: 'http://dev-vendor.magictiger.com/food-menu/finish.html'  
   };        
 })();
 
