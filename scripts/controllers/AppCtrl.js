@@ -212,6 +212,18 @@
 						sessionStorage.clear();
 						$rootScope.isLogoutRequestPending = true;
 						$scope.forceLogout("Logging Out.");
+
+						var date = new Date();
+						var slackWebhookUrl = 'https://hooks.slack.com/services/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';	
+						var slackPayload = { 
+					 		"text": "Agent " + $rootScope.user.name + " logged out at " + date.toLocaleString(), 
+					 		"username": "Online bot", 
+					 		"icon_emoji": ":monkey_face:"
+					 	};
+					 	var payload = JSON.stringify(slackPayload);
+					 	var http = new XMLHttpRequest();
+						http.open("POST", slackWebhookUrl, true);
+						http.send(payload);
 						
 						PanelAuthService.agentPanelLogout.query({
 							key : $rootScope.user.token
@@ -221,7 +233,8 @@
 								'token':$rootScope.user.token,
 								'pingCallback':'success',
 								'agent':$rootScope.tigoId
-							});			
+							});
+							
 							$rootScope.isLogin = $scope.isLogin = false;
 							$rootScope.user = null;
 							$rootScope.plustxtcacheobj = null;
