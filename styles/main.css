@@ -1020,3 +1020,7 @@ background-image: -webkit-gradient(
   bottom: 0;
   right: 5px;
 }
+
+#audio-notify {
+	display: none;
+}

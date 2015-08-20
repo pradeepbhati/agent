@@ -17,7 +17,7 @@
             PanelAuthService.agentPingCallback($rootScope.user.token).query({
               score: $scope.activeWindows.length
             }, function success(response) {
-              console.log(response);
+              // console.log(response);
             }, function failure(error) {
               console.log(error);
             });
