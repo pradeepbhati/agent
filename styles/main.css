@@ -1021,6 +1021,14 @@ background-image: -webkit-gradient(
   right: 5px;
 }
 
+.is-paused {
+	background-color: #444;
+}
+
+.is-paused .user, .is-paused .logout{
+	color: #fff;
+}
+
 #audio-notify {
 	display: none;
 }

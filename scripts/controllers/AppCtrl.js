@@ -183,6 +183,19 @@
 					}
 				});
 
+				window.isPaused = false;
+				$scope.paused = false;
+
+				$scope.pause = function(){
+					if(window.isPaused){
+						window.isPaused = false;
+						$scope.paused = false;
+					} else {
+						window.isPaused = true;
+						$scope.paused = true;
+					}
+				};
+
 			    $scope.logout = function(){
 				
 				LogglyService.sendLog({

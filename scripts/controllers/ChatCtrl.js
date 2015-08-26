@@ -14,8 +14,9 @@
         $scope.startAgentPingBack = function() {
           if (angular.isDefined(stopAgentPingBack)) return;
           stopAgentPingBack = $interval(function() {
+            var count = window.isPaused?100:$scope.activeWindows.length;
             PanelAuthService.agentPingCallback($rootScope.user.token).query({
-              score: $scope.activeWindows.length
+              score: count
             }, function success(response) {
               // console.log(response);
             }, function failure(error) {

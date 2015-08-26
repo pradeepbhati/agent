@@ -107,7 +107,11 @@
             <div class="row">
                 <div class="col-md-2 logo mt5"> MagicTiger</div>
                 <div class="col-md-7  mt5 f16 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
-                <div class="col-md-2 logoutDiv"  align="center" ng-if="isLogin">
+                <div ng-class="paused? 'col-md-2 logoutDiv is-paused' : 'col-md-2 logoutDiv' " align="center" ng-if="isLogin" style="margin-right: 20px;" ng-class="">
+                    <div class="fa fa-lg fa-drupal user"></div>
+                    <div  ng-click="pause()"  class="logout">Pause</div>
+                </div>
+                <div class="col-md-2 logoutDiv" align="center" ng-if="isLogin">
                     <div class="fa fa-lg fa-user user"></div>
                     <div  ng-click="logout()"  class="logout">Logout</div>
                 </div>
