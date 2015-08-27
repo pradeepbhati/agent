@@ -234,12 +234,14 @@
                 var messageId = $rootScope.tigoId + "-dv-" + strTimeMii;
                 var mid = messageId.toString();
                 // Sending delivery acknowledment back.
-                var message2 = $msg({to: response['full_jid'], "type": "chat", "id": mid}).c('delivered').t(messageID).up().c('thread').t(threadId).up().c('meta');
+                 var messageReceived = $msg({to: response['full_jid'], "type": "chat", "id": mid}).c('received', {id: message.id, xmlns:"urn:xmpp:chat-markers:0"}).t(messageID).up().c('thread').t(threadId).up().c('meta');
+                 var messageDisplayed = $msg({to: response['full_jid'], "type": "chat", "id": mid}).c('displayed', {id:message.id, xmlns:"urn:xmpp:chat-markers:0"}).t(messageID).up().c('thread').t(threadId).up().c('meta');
                 // $('#mid-'+messageID).html('Delivered&nbsp;');
-		response['timeMilli'] = strTimeMii
+		 response['timeMilli'] = strTimeMii;
                 on_Message_Update_Chat(response);
-                $rootScope.chatSDK.connection.send(message2);
-                console.log('@on_message : Delivery Acknowledment Sent ' + message2);
+                 $rootScope.chatSDK.connection.send(messageReceived);
+		 $rootScope.chatSDK.connection.send(messageDisplayed);
+                console.log('@on_message : Delivery Acknowledment Sent ' + messageReceived);
             }
             return true;
         },

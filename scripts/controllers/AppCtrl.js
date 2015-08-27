@@ -1,8 +1,8 @@
 (function (angular){
 	"use strict;"
 	angular.module('bargain')
-		.controller('AppCtrl', ['$scope', '$rootScope', 'ChatServerService', 'StropheService', 'ChatCoreService', 'PanelAuthService', 'MessageService', 'TemplateService','UtilService', 'IntimationService', '$timeout', '$cookieStore',
-			function ($scope, $rootScope, ChatServerService, StropheService, ChatCoreService, PanelAuthService, MessageService, TemplateService, UtilService, IntimationService, $timeout, $cookieStore) {
+		.controller('AppCtrl', ['$scope', '$rootScope', 'ChatServerService', 'StropheService', 'ChatCoreService', 'PanelAuthService', 'MessageService', 'TemplateService','UtilService', 'IntimationService', '$timeout', '$cookieStore', 'LogglyService',
+			function ($scope, $rootScope, ChatServerService, StropheService, ChatCoreService, PanelAuthService, MessageService, TemplateService, UtilService, IntimationService, $timeout, $cookieStore, LogglyService) {
 
 				$scope.init =function(){
 					// $rootScope.bargainAgent = user;
@@ -59,41 +59,86 @@
 					$rootScope.stropheStatus = status;
 					switch(status){
 						case Strophe.Status.CONNECTING:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'connecting',
+								'agent':$rootScope.tigoId
+							});			
 							$rootScope.isLogin = $scope.isLogin = true;
 							$scope.chatConnectionStatus = "Connecting";
 							break;
 						case Strophe.Status.CONNECTED:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'connected',
+								'agent':$rootScope.tigoId
+							});			
 							$rootScope.isLogin = $scope.isLogin = true;
 							$scope.chatConnectionStatus = "Connected";
 							$scope.connectedState();
 							break;
 						case Strophe.Status.DISCONNECTING:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'disconnecting',
+								'agent':$rootScope.tigoId
+							});			
 							break;
 						case Strophe.Status.DISCONNECTED:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'disconnected',
+								'agent':$rootScope.tigoId
+							});			
 							if(!$rootScope.isLogoutRequestPending){
 								$scope.loginToChatServer();
 							}
 							else{
-								window.location= window.location.href;
+								//window.location= window.location.href;
 							}
 							break;
 						case Strophe.Status.AUTHENTICATING:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'authenticating',
+								'agent':$rootScope.tigoId
+							});			
 							break;
 						case Strophe.Status.ERROR:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'error',
+								'agent':$rootScope.tigoId
+							});			
 							$scope.init();
 							$scope.loginToChatServer();
 							break;
 						case Strophe.Status.CONNFAIL:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'connfail',
+								'agent':$rootScope.tigoId
+							});			
 							$scope.chatConnectionStatus = "It seems you are logged in from another place. Going to logout.";
 							$cookieStore.remove('agentKey');
 							sessionStorage.clear();
 							window.location= window.location.href;
 							break;
 						case Strophe.Status.AUTHFAIL:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'connfail',
+								'agent':$rootScope.tigoId
+							});			
 							$scope.chatConnectionStatuse = "Invalid Credentials while logging to Chat Server. Going to logout."
-							$scope.forceLogout(statusMessage);
+							//$scope.forceLogout(statusMessage);
 							break;
 						case Strophe.Status.ATTACHED:
+							LogglyService.sendLog({
+								'_eventType':'stropheStatus',
+								'status':'attached',
+								'agent':$rootScope.tigoId
+							});			
 							break;
 					}
 					$timeout(function(){
@@ -128,7 +173,7 @@
 						}, 
 						function failure(error){
 							MessageService.displayError("Chat Server user details could not be fetched.");
-						})	
+						});
 				};
 
 				$rootScope.$on('chatConnet', function(){
@@ -138,7 +183,40 @@
 					}
 				});
 
-				$scope.logout = function(){
+				window.isPaused = false;
+				$scope.paused = false;
+
+				$scope.pause = function(){
+					if(window.isPaused){
+						window.isPaused = false;
+						$scope.paused = false;
+					} else {
+						window.isPaused = true;
+						$scope.paused = true;
+					}
+				};
+
+			    $scope.logout = function(){
+				
+				LogglyService.sendLog({
+					'_eventType':'logoutInitiated',
+					'agent':$rootScope.tigoId
+				});			
+				
+				if($rootScope.plustxtcacheobj){
+				    console.log($rootScope.plustxtcacheobj);
+				    var contactsOnPage = $rootScope.plustxtcacheobj.contact;
+				    var size = 0, key;
+				    for (key in contactsOnPage) {
+					if (contactsOnPage.hasOwnProperty(key)) size++;
+				    }
+				    if(size){
+					MessageService.displayBlockingError(size.toString()+' chat windows are open. Please close them before logging out.').then(function(){
+					    console.log('Agent tried to logout with active windows');
+					});
+					return;
+				    }
+				}
 					PanelAuthService.agentPingCallback($rootScope.user.token).query({
 						score : Globals.AppConfig.MaxAgentUsers
 					}, function success(response){
@@ -147,10 +225,69 @@
 						sessionStorage.clear();
 						$rootScope.isLogoutRequestPending = true;
 						$scope.forceLogout("Logging Out.");
+
+						var date = new Date();
+						var slackWebhookUrl = 'https://hooks.slack.com/services/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';	
+						var slackPayload = { 
+					 		"text": "Agent " + $rootScope.user.name + " logged out at " + date.toLocaleString(), 
+					 		"username": "Online bot", 
+					 		"icon_emoji": ":monkey_face:"
+					 	};
+					 	var payload = JSON.stringify(slackPayload);
+					 	var http = new XMLHttpRequest();
+						http.open("POST", slackWebhookUrl, true);
+						http.send(payload);
 						
+						PanelAuthService.agentPanelLogout.query({
+							key : $rootScope.user.token
+						},function success(response){
+							LogglyService.sendLog({
+								'_eventType':'loggedOut',
+								'token':$rootScope.user.token,
+								'pingCallback':'success',
+								'agent':$rootScope.tigoId
+							});
+							
+							$rootScope.isLogin = $scope.isLogin = false;
+							$rootScope.user = null;
+							$rootScope.plustxtcacheobj = null;
+						},function failure(error){
+							LogglyService.sendLog({
+								'_eventType':'logoutFailure',
+								'token':$rootScope.user.token,
+								'pingCallback':'success',
+								'agent':$rootScope.tigoId
+							});
+							$rootScope.isLogin = $scope.isLogin = false;
+							$rootScope.user = null;
+							$rootScope.plustxtcacheobj = null;
+						});
 					}, function failure(error){
 						MessageService.displayError("Some error occured while logging out.");
-					})
+						PanelAuthService.agentPanelLogout.query({
+							key : $rootScope.user.token
+						},function success(response){
+							LogglyService.sendLog({
+								'_eventType':'loggedOut',
+								'token':$rootScope.user.token,
+								'pingCallback':'failure',
+								'agent':$rootScope.tigoId
+							});			
+							$rootScope.isLogin = $scope.isLogin = false;
+							$rootScope.user = null;
+							$rootScope.plustxtcacheobj = null;
+						},function failure(error){
+							LogglyService.sendLog({
+								'_eventType':'logoutFailure',
+								'token':$rootScope.user.token,
+								'pingCallback':'failure',
+								'agent':$rootScope.tigoId
+							});
+							$rootScope.isLogin = $scope.isLogin = false;
+							$rootScope.user = null;
+							$rootScope.plustxtcacheobj = null;
+						});
+					});
 				};
 
 				$scope.reconnectConnection =function(){

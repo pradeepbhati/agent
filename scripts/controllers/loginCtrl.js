@@ -1,7 +1,7 @@
 (function(angular){
 	"use strict";
-	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location', 'PanelAuthService', 'MessageService', '$cookieStore',
-		function($scope, $rootScope, $location, PanelAuthService, MessageService, $cookieStore){
+	angular.module('bargain').controller('loginCtrl', ['$scope', '$rootScope','$location', 'PanelAuthService', 'MessageService', '$cookieStore', '$http',
+		function($scope, $rootScope, $location, PanelAuthService, MessageService, $cookieStore, $http){
 
 		function validateLogin(){
 			var isValid = true;
@@ -33,6 +33,7 @@
 		$scope.checkLogin();
 
 		$scope.loginToPanel = function(){
+			var slackWebhookUrl = 'https://hooks.slack.com/services/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';
 			PanelAuthService.agentPanelLogin.query({
 				username : $scope.username,
 				password : $scope.password
@@ -42,11 +43,22 @@
 				 		name : $scope.username,
 				 		password: $scope.password,
 				 		token: response.key
-				 	}
+				 	};
+
+				 	var date = new Date();
+				 	var slackPayload = { 
+				 		"text": "Agent " + $scope.username + " logged in at " + date.toLocaleString(), 
+				 		"username": "Online bot", 
+				 		"icon_emoji": ":monkey_face:"
+				 	};
 					$cookieStore.put('agentKey',user.token);
 				 	$rootScope.user = user;
 				 	$rootScope.isLogin = $scope.isLogin = true;
 				 	$rootScope.$broadcast('chatConnet');
+
+				 	var http = new XMLHttpRequest();
+    				http.open("POST", slackWebhookUrl, true);
+    				http.send(JSON.stringify(slackPayload));
 				}
 				else{
 					MessageService.displayError("Some error occured while logging in. Please ");

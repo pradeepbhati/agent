@@ -38,6 +38,10 @@
     <script src="scripts/vendor/angular-cookies.js"></script>
     <script src="scripts/vendor/strophe.js"></script>
     <script src="scripts/vendor/moment.js"></script>
+    <script src="scripts/vendor/le.min.js"></script>
+    <script src="scripts/vendor/ng-file-upload-all.js"></script>
+    <script src="scripts/vendor/ng-file-upload-shim.js"></script>
+    <script src="scripts/vendor/ng-file-upload.js"></script>
     <script src="bower_components/ng-clip/src/ngClip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.min.js"></script>
 
@@ -51,10 +55,13 @@
     <script src="scripts/services/ChatServerService.js"></script>
     <script src="scripts/services/ChatCoreService.js"></script>
     <script src="scripts/services/StropheService.js"></script>
+    <script src="scripts/services/ChatDSLService.js"></script>
     <script src="scripts/services/UtilService.js"></script>
     <script src="scripts/services/TemplateService.js"></script>
     <script src="scripts/services/IntimationService.js"></script>
     <script src="scripts/services/ConsumerDataService.js"></script>
+    <script src="scripts/services/WizRocketService.js"></script>
+    <script src="scripts/services/LogglyService.js"></script>
     <script src="scripts/services/MessageService.js"></script>
     <script src="scripts/directives/angular-enter/angular-enter.js"></script>
     <script src="scripts/directives/input-type-number/input-type-number.js"></script>
@@ -65,6 +72,31 @@
     <script src="scripts/directives/chat-contact-list/chat-contact-list.js"></script>
 
 
+    <!-- Setup Logging with Logentries and Loggly -->
+    <script type="text/javascript" src="http://cloudfront.loggly.com/js/loggly.tracker.min.js" async></script>
+    <script>
+      
+      LE.init('a6ae9008-dfb6-4db8-9ff6-d4ff5b626e69');
+      
+      var _LTracker = _LTracker || [];
+      _LTracker.push({'logglyKey': '14455f19-06e3-4147-9c1d-8e2eb0392ea5',
+      'sendConsoleErrors' : true });
+    </script>
+
+    <script type="text/javascript">
+      var wizrocket = {event:[], profile:[], account:[], enum:function(e){return '$E_' + e}};
+      wizrocket.account.push({"id": "RZZ-4K8-KK4Z"});
+      (function () {
+      var wzrk = document.createElement('script');
+      wzrk.type = 'text/javascript';
+      wzrk.async = true;
+      wzrk.src = ('https:' == document.location.protocol ? 'https://d2r1yp2w7bby2u.cloudfront.net' : 'http://static.wizrocket.com') + '/js/a.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wzrk, s);
+      })();
+    </script>
+	         
+    
 </head>
 
 <body ng-controller="AppCtrl">
@@ -75,11 +107,15 @@
             <div class="row">
                 <div class="col-md-2 logo mt5"> MagicTiger</div>
                 <div class="col-md-7  mt5 f16 status-{{stropheStatus}}" align="left">{{chatConnectionStatus}}</div>
-                <div class="col-md-2 logoutDiv"  align="center" ng-if="isLogin">
+                <div ng-class="paused? 'col-md-2 logoutDiv is-paused' : 'col-md-2 logoutDiv' " align="center" ng-if="isLogin" style="margin-right: 20px;" ng-class="">
+                    <div class="fa fa-lg fa-drupal user"></div>
+                    <div  ng-click="pause()"  class="logout">Pause</div>
+                </div>
+                <div class="col-md-2 logoutDiv" align="center" ng-if="isLogin">
                     <div class="fa fa-lg fa-user user"></div>
                     <div  ng-click="logout()"  class="logout">Logout</div>
                 </div>
-                <div class="col-md-1"  ng-if="isLogin">
+                <div class="col-md-1" ng-hide="true"  ng-if="isLogin">
                    <input type="submit" value="Reconnect" class="btn btn-primary btn-teal" ng-click="reconnectConnection()"></input>
                 </div>
             </div>
@@ -151,10 +187,15 @@
 
                     <div class="col-md-1  closeIcon" ng-click="closeUserChat()"></div>
                 </div>
+		<div class="row" ng-if="isAppUser()">
+		  <div class="col-md-12">
+		    Is using MagicTiger Android App
+		  </div>
+		</div>
             </li>
             <li>
               <div class="fixheader" align="center">
-              <a href="javascript:void(0)" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
+              <a href="javascript:void(0)" ng-if="scope.chatData.nextPage != ''" ng-click="loadHistory(chatData.userId)" style="font-size:0.8em">Load Previous Message</a>
               
               </div>
 
@@ -163,18 +204,31 @@
             <li class="chatArea" ng-show="!showPromo && !showTemplates && !showProduct" ng-click="setFocus()" chat-scroll-down>
                 <div style="margin-bottom:10px;">
                     
-                    <div ng-repeat='message in messages'>
-                        <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg">
-                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode">
+                  <div ng-repeat='message in messages'>
+		    <div class="system-message" ng-trim="true" ng-if="message.isSystemMessage">
+		      {{message.txt}} at {{parsedDate(message.sent_on)}}
+		    </div>
+                        <div class='bubble fr reporter bgblue', , ng-class="message.sender== contact.id ? 'user-mesg' : 'bubble--alt agent-mesg'" ng-if="!message.isProductDetails && !message.isCloseChatMesg && !message.isSystemMessage">
+                            <div class='chat-name' ng-if="!message.isCloseChatMesg && !message.isPromoCode && !message.isImage && !message.isLocation && !message.isSystemMessage && !message.isFoodForm">
                                 <i class="fa fa-lg" ng-class="message.via == 'whatsapp' ? 'fa-whatsapp': 'fa-laptop'"></i>
                                 {{message.txt}}
                             </div>
+			    <div class='chat-name' ng-if="message.isFoodForm">
+			      <a target="_blank" ng-href="{{ message.formUrl }}" >{{ message.formUrl }}</a>
+			    </div>
+			    <div class='chat-name' ng-if="message.isImage">
+			      <a target="_blank" ng-href="{{ message.img.url }}" ><img ng-src="{{ message.img.thumbnail }}" /></a>
+			    </div>
+			    <div class='chat-name' ng-if="message.isLocation">
+			      <a target="_blank" ng-href="{{ message.loc.url }}" ><img ng-src="{{ message.loc.thumbnail }}" /></a>
+			    </div>
                             <div class='chat-name' ng-if="message.isPromoCode">
                                 {{getJsonParsedMesg(message.txt).PRMCODE.message}}
                             </div>
                             <span ng-if="message.sender != contact.id" style='float:right;font-size:9px'>{{ getMesgState(message.state)}}</span>
                         </div>
-                        <div align="center" class="clear " ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}}</div>
+                        <div align="center" class="clear " ng-if="!message.isSystemMessage" ng-class="message.sender != contact.id ? 'messageTime' : 'messageTimeLeft'" style='font-size:9px' >{{parsedDate(message.sent_on)}} <b>{{message.sender}}</b></div>
+			
                         <div class='leftConversation clear' ng-if="message.isCloseChatMesg">
                             User left the conversation
                         </div>
@@ -187,10 +241,14 @@
             
 
             <!-- Bottom Text Area -->
-            <li ng-click="setFocus()">
-                <div class="chatText col-md-12">
-                        <textarea type="text" placeholder="Send a message" class="chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
-                </div>
+            <li ng-click="focusTextArea()">
+              <div class="chatText col-md-12">
+                  <div ng-if="isAppUser()" class="fa fa-paperclip attach-file" ngf-select ngf-accept="'image/*'" ngf-change="upload($files)"></div>
+                  <div ng-if="isAppUser()" class="fa fa-cutlery food-menu" ng-click="sendFoodForm()"></div>
+                  <div class="fa fa-cc-visa payment-button" ng-click="sendPaymentLink()"></div>
+                  <textarea type="text" placeholder="Send a message" class="col-md-12 chatTextArea" ng-enter="submitMessage()" ng-model="agentMessage" ng-focus="setFocus()" ng-disabled="contact.chatState =='closed'"></textarea>
+              </div>
+
             </li>
         </ul>
     </div>
@@ -215,6 +273,11 @@
             <div class="circle col-md-2 ml7" ng-if="getUnReadMessageCount(user) && user.chatState !='closed'" ng-class="activeChatUser == user.id ? 'green' : '' " >{{getUnReadMessageCount(user)}}</div>
             <div class="circle col-md-3 ml7 red" ng-if="user.chatState =='closed'" ng-click="closeChatFromLeftNav(user)">X</div>
         </li>
+	<li ng-hide="true">
+    	<div align="center" class="chatText col-md-12">
+		<textarea type="text" placeholder="Start new conversation" class="chatTextArea" ng-enter="newConversation()" ng-model="newConversationNumber"> </textarea>
+    	</div>
+	</li>
     </ul>
 
 </script>
@@ -234,7 +297,31 @@
 </div>
 </script>
 
-    
+<script type="text/ng-template" id="paymentInfo.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Create Payment Link</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="paymentAmount" class="col-sm-2 control-label">Payment Amount</label>
+            <div class="col-sm-10">
+              <input type="number" required class="form-control" id="paymentAmount" placeholder="Payment Amount" ng-model="payment.amount">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="paymentUrl" class="col-sm-2 control-label">Payment URL</label>
+            <div class="col-sm-10">
+                <input type="url" class="form-control" id="paymentUrl" placeholder="Payment URL" ng-model="payment.url">
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-success" ng-click="ok()">OK</button>
+    </div>
+</script>
+    <audio src="static/ding.mp3" preload autobuffer="true" id="audio-notify" volume="1.0"></audio>
    <!--  <div ng-view ="" class="container" align="center"></div> -->
 </body>
 </html>
