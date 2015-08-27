@@ -28,9 +28,13 @@
 
             scope.closeUserChat = function() {
               if (scope.contact.chatState != "closed") {
+                var closeChatInteractionMessage = scope.getCloseChatInteractionMessage(scope.chatData.threadId);
+                scope.sendLog(closeChatInteractionMessage);
                 MessageService.confirm("Are you sure you want to close conversation with " + scope.contact.name + " ?")
                   .then(function() {
                     if (scope.isAppUser() == true) {
+                      var getCloseChatConfirmationMessage = scope.getCloseChatConfirmationMessage(scope.chatData.threadId);
+                      scope.sendLog(getCloseChatConfirmationMessage);
                       var closeChatAppMessage = scope.getCloseChatAppMessage(scope.chatData.threadId);
                       scope.agentMessage = closeChatAppMessage;
                       scope.submitMessage();
@@ -263,6 +267,20 @@
                   console.log(error);
                 });
               }
+            };
+
+            scope.sendLog = function(message){
+              var timeInMilliSecond = UtilService.getTimeInLongString();
+              var strTimeMii = timeInMilliSecond.toString();
+
+              LogglyService.sendLog({
+                '_eventType': 'message-new',
+                "sender": scope.agentId,
+                "receiver": scope.contact.id,
+                "txt": message,
+                "via": scope.isAppUser() ? 'app' : 'whatsapp',
+                "sent_on": strTimeMii.substring(0, 10)
+              });
             };
 
             scope.submitMessage = function(isPromoCode) {

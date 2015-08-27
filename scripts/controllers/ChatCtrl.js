@@ -278,7 +278,31 @@
             }
           };
           return JSON.stringify(closeChatAppMessageJson);
-        }
+        };
+
+        $scope.getCloseChatInteractionMessage = function(threadId) {
+          var closeChatInteractMessageJson = {
+            "_mt_cmmd": {
+              "timestamp": (new Date).getTime(),
+              "type": "AGENT_INITIATED_CHAT_CLOSE",
+              "user": threadId,
+              "agent": $rootScope.tigoId
+            }
+          };
+          return JSON.stringify(closeChatInteractMessageJson);
+        };
+
+        $scope.getCloseChatConfirmationMessage = function(threadId) {
+          var closeChatConfirmMessageJson = {
+            "_mt_cmmd": {
+              "timestamp": (new Date).getTime(),
+              "type": "AGENT_CONFIRM_CHAT_CLOSE",
+              "user": threadId,
+              "agent": $rootScope.tigoId
+            }
+          };
+          return JSON.stringify(closeChatConfirmMessageJson);
+        };
 
         $scope.sendMessage = function(body, jid, timeInMilliSecond, mid, threadId) {
           if (body !== "") {
